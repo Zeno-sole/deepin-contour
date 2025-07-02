@@ -1,15 +1,24 @@
-Source: template-repository
-Section: unknown
+Source: contour
+Section: devel
 Priority: optional
-Maintainer: Tsic404 <liuheng@deepin.org>
-Build-Depends: debhelper (>= 11)
-Standards-Version: 4.1.3
-Homepage: https://github.com/deepin-community/template-repository
-#Vcs-Browser: https://salsa.debian.org/debian/deepin-community-template-repository
-#Vcs-Git: https://salsa.debian.org/debian/deepin-community-template-repository.git
+Maintainer: April Lu <apr3vau@outlook.com>
+Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules, g++-13,
+ libfreetype-dev, libharfbuzz-dev, libfontconfig-dev, qt6-base-dev,
+ qt6-declarative-dev, qt6-5compat-dev, libyaml-cpp-dev, catch2, ms-gsl,
+ librange-v3-dev, libutempter-dev, extra-cmake-modules, libssh2-1-dev,
+ libx11-xcb-dev, ncurses-bin, libgl1-mesa-dev, libglvnd-dev,
+ qml6-module-qt-labs-platform, qml6-module-qtqml-workerscript,
+ qml6-module-qtquick-controls, qml6-module-qtquick-layouts,
+ qml6-module-qtmultimedia, qml6-module-qtquick-templates,
+ qml6-module-qtquick-window, qml6-module-qt5compat-graphicaleffects,
+ qt6-base-dev-tools, qt6-multimedia-dev, qt6-qpa-plugins
+Standards-Version: 4.6.0
+Homepage: https://github.com/contour-terminal/contour
+Rules-Requires-Root: no
 
-Package: template-repository
+Package: contour
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: Modern C++ Terminal Emulator
+ contour is a modern and actually fast, modal, virtual terminal emulator,
+ for everyday use. It is aiming for power users with a modern feature mindset.

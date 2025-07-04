@@ -4,9 +4,10 @@ Priority: optional
 Maintainer: April Lu <apr3vau@outlook.com>
 Build-Depends: debhelper-compat (= 13), cmake, extra-cmake-modules, g++-13,
  libfreetype-dev, libharfbuzz-dev, libfontconfig-dev, qt6-base-dev,
- qt6-declarative-dev, qt6-5compat-dev, libyaml-cpp-dev, catch2, ms-gsl,
+ qt6-declarative-dev, qt6-5compat-dev, libyaml-cpp-dev, catch2, libmsgsl-dev,
  librange-v3-dev, libutempter-dev, extra-cmake-modules, libssh2-1-dev,
- libx11-xcb-dev, ncurses-bin, libgl1-mesa-dev, libglvnd-dev,
+ libx11-xcb-dev, ncurses-bin, libgl1-mesa-dev, libglvnd-dev, libunicode-dev,
+ libboxed-cpp-dev, libreflection-cpp-dev,
  qml6-module-qt-labs-platform, qml6-module-qtqml-workerscript,
  qml6-module-qtquick-controls, qml6-module-qtquick-layouts,
  qml6-module-qtmultimedia, qml6-module-qtquick-templates,

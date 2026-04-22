@@ -19,7 +19,7 @@ Rules-Requires-Root: no
 
 Package: contour
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, ncurses-term (>= 6.5+20250216-2)
 Description: Modern C++ Terminal Emulator
  contour is a modern and actually fast, modal, virtual terminal emulator,
  for everyday use. It is aiming for power users with a modern feature mindset.

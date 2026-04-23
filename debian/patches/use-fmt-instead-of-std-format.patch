@@ -34,7 +34,7 @@ Index: deepin-contour/src/contour/Actions.h
          auto format(contour::actions::T const&, auto& ctx) const                 \
          {                                                                        \
 -            return formatter<string_view>::format(#T, ctx);                      \
-+            return fmt::formatter<string_view>::format(#T, ctx);                      \
++            return fmt::formatter<std::string_view>::format(#T, ctx);                      \
          }                                                                        \
      };
  
@@ -48,7 +48,7 @@ Index: deepin-contour/src/contour/Actions.h
      auto format(contour::actions::SwitchToTab const& value, auto& ctx) const
      {
 -        return formatter<string>::format(std::format("SwitchToTab {{ position: {} }}", value.position), ctx);
-+        return fmt::formatter<string>::format(fmt::format("SwitchToTab {{ position: {} }}", value.position), ctx);
++        return fmt::formatter<std::string>::format(fmt::format("SwitchToTab {{ position: {} }}", value.position), ctx);
      }
  };
  
@@ -87,7 +87,7 @@ Index: deepin-contour/src/contour/Actions.h
          }
          // }}}
 -        return formatter<string>::format(name, ctx);
-+        return fmt::formatter<string>::format(name, ctx);
++        return fmt::formatter<std::string>::format(name, ctx);
      }
  };
  
@@ -102,7 +102,7 @@ Index: deepin-contour/src/contour/Actions.h
              case contour::actions::CopyFormat::VT: output = "VT"; break;
          }
 -        return formatter<string_view>::format(output, ctx);
-+        return fmt::formatter<string_view>::format(output, ctx);
++        return fmt::formatter<std::string_view>::format(output, ctx);
      }
  };
  
@@ -265,7 +265,7 @@ Index: deepin-contour/src/contour/Config.h
              case contour::config::Permission::Ask: name = "ask"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -302,7 +302,7 @@ Index: deepin-contour/src/contour/Config.h
              case vtbackend::StatusDisplayPosition::Top: name = "Top"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -315,8 +315,8 @@ Index: deepin-contour/src/contour/Config.h
          if (auto* loc = std::get_if<std::filesystem::path>(&value.location))
 -            return formatter<string_view>::format(loc->string(), ctx);
 -        return formatter<string_view>::format("Image", ctx);
-+            return fmt::formatter<string_view>::format(loc->string(), ctx);
-+        return fmt::formatter<string_view>::format("Image", ctx);
++            return fmt::formatter<std::string_view>::format(loc->string(), ctx);
++        return fmt::formatter<std::string_view>::format("Image", ctx);
      }
  };
  
@@ -331,7 +331,7 @@ Index: deepin-contour/src/contour/Config.h
              case vtbackend::StatusDisplayType::HostWritable: name = "host writable"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -726,7 +726,7 @@ Index: deepin-contour/src/contour/TerminalSession.h
          }
          // clang-format on
 -        return formatter<string_view>::format(output, ctx);
-+        return fmt::formatter<string_view>::format(output, ctx);
++        return fmt::formatter<std::string_view>::format(output, ctx);
      }
  };
 Index: deepin-contour/src/contour/TerminalSessionManager.cpp
@@ -886,7 +886,7 @@ Index: deepin-contour/src/contour/helper.h
  
  template <>
 -struct std::formatter<contour::RenderState>: std::formatter<string_view>
-+struct fmt::formatter<contour::RenderState>: fmt::formatter<string_view>
++struct fmt::formatter<contour::RenderState>: fmt::formatter<std::string_view>
  {
      using State = contour::RenderState;
      auto format(State state, auto& ctx) const
@@ -895,7 +895,7 @@ Index: deepin-contour/src/contour/helper.h
              case State::DirtyPainting: name = "dirty-painting"; break;
          }
 -        return std::formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
 Index: deepin-contour/src/crispy/App.cpp
@@ -1765,7 +1765,7 @@ Index: deepin-contour/src/text_shaper/font.h
  
  template <>
 -struct std::formatter<text::font_weight>: formatter<string_view>
-+struct fmt::formatter<text::font_weight>: fmt::formatter<string_view>
++struct fmt::formatter<text::font_weight>: fmt::formatter<std::string_view>
  {
      auto format(text::font_weight value, auto& ctx) const
      {
@@ -1774,13 +1774,13 @@ Index: deepin-contour/src/text_shaper/font.h
              case text::font_weight::extra_black: name = "ExtraBlack"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
  template <>
 -struct std::formatter<text::font_slant>: formatter<string_view>
-+struct fmt::formatter<text::font_slant>: fmt::formatter<string_view>
++struct fmt::formatter<text::font_slant>: fmt::formatter<std::string_view>
  {
      auto format(text::font_slant value, auto& ctx) const
      {
@@ -1789,13 +1789,13 @@ Index: deepin-contour/src/text_shaper/font.h
              case text::font_slant::oblique: name = "Oblique"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
  template <>
 -struct std::formatter<text::font_spacing>: formatter<string_view>
-+struct fmt::formatter<text::font_spacing>: fmt::formatter<string_view>
++struct fmt::formatter<text::font_spacing>: fmt::formatter<std::string_view>
  {
      auto format(text::font_spacing value, auto& ctx) const
      {
@@ -1804,7 +1804,7 @@ Index: deepin-contour/src/text_shaper/font.h
              case text::font_spacing::mono: name = "Monospace"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -1920,7 +1920,7 @@ Index: deepin-contour/src/text_shaper/font.h
              case text::render_mode::color: name = "Color"; break;
          }
 -        return std::formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  // }}}
@@ -2048,7 +2048,7 @@ Index: deepin-contour/src/text_shaper/shaper.h
              case text::bitmap_format::rgba: name = "rgba"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2152,7 +2152,7 @@ Index: deepin-contour/src/vtbackend/CellFlags.h
          // clang-format on
  
 -        return formatter<string_view>::format(s, ctx);
-+        return fmt::formatter<string_view>::format(s, ctx);
++        return fmt::formatter<std::string_view>::format(s, ctx);
      }
  };
  // }}}
@@ -2316,7 +2316,7 @@ Index: deepin-contour/src/vtbackend/ColorPalette.h
              case vtbackend::ColorPreference::Light: name = "Light"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2331,7 +2331,7 @@ Index: deepin-contour/src/vtbackend/ColorPalette.h
              case vtbackend::ColorMode::Bright: name = "Bright"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2346,7 +2346,7 @@ Index: deepin-contour/src/vtbackend/ColorPalette.h
              case vtbackend::ColorTarget::Background: name = "Background"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  // }}}
@@ -2408,7 +2408,7 @@ Index: deepin-contour/src/vtbackend/Functions.h
                  ;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2735,7 +2735,7 @@ Index: deepin-contour/src/vtbackend/Image.h
              case vtbackend::ImageFormat::RGBA: name = "RGBA"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2787,7 +2787,7 @@ Index: deepin-contour/src/vtbackend/Image.h
              case vtbackend::ImageResize::StretchToFill: name = "StretchToFill"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2802,7 +2802,7 @@ Index: deepin-contour/src/vtbackend/Image.h
              case vtbackend::ImageAlignment::BottomEnd: name = "BottomEnd"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2969,7 +2969,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
              case vtbackend::KeyboardEventType::Release: name = "Release"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2984,7 +2984,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
                  // clang-format on
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -2999,7 +2999,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
              case vtbackend::MouseProtocol::AnyEventTracking: name = "AnyEventTracking"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -3029,7 +3029,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
                  break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -3044,7 +3044,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
              case vtbackend::KeyMode::Application: name = "Application"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -3059,7 +3059,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
              case vtbackend::MouseButton::WheelRight: name = "WheelRight"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -3074,7 +3074,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
              case vtbackend::MouseTransport::SGRPixels: name = "SGR-Pixels"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -3089,7 +3089,7 @@ Index: deepin-contour/src/vtbackend/InputGenerator.h
              case vtbackend::Key::Numpad_9: name = "Numpad_9"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  // }}}
@@ -3478,7 +3478,7 @@ Index: deepin-contour/src/vtbackend/Screen.h
              case vtbackend::RequestStatusString::DECSSDT: name = "DECSSDT"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -3784,7 +3784,7 @@ Index: deepin-contour/src/vtbackend/Selector.h
              case State::Complete: name = "Complete"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4156,7 +4156,7 @@ Index: deepin-contour/src/vtbackend/Terminal.h
              case DynamicColorName::HighlightBackgroundColor: name = "HighlightBackgroundColor"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4171,7 +4171,7 @@ Index: deepin-contour/src/vtbackend/Terminal.h
              case vtbackend::ExecutionMode::BreakAtEmptyQueue: name = "BREAK AT EMPTY"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4246,7 +4246,7 @@ Index: deepin-contour/src/vtbackend/VTType.h
              case vtbackend::VTType::VT525: name = "VT525"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  template <>
@@ -4260,7 +4260,7 @@ Index: deepin-contour/src/vtbackend/VTType.h
              case vtbackend::VTExtension::Contour: name = "Contour"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  // }}}
@@ -4408,7 +4408,7 @@ Index: deepin-contour/src/vtbackend/ViInputHandler.h
              case TextObjectScope::A: name = "a"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4423,7 +4423,7 @@ Index: deepin-contour/src/vtbackend/ViInputHandler.h
              case TextObject::BigWord: name = "BigWord"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4438,7 +4438,7 @@ Index: deepin-contour/src/vtbackend/ViInputHandler.h
              case ViOperator::ReverseSearchCurrentWord: name = "ReverseSearchCurrentWord"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4453,7 +4453,7 @@ Index: deepin-contour/src/vtbackend/ViInputHandler.h
              case ViMotion::LineMarkDown: name = "LineMarkDown"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4686,7 +4686,7 @@ Index: deepin-contour/src/vtbackend/primitives.h
              case vtbackend::CursorShape::Underscore: name = "Underscore"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4734,7 +4734,7 @@ Index: deepin-contour/src/vtbackend/primitives.h
              case vtbackend::ScreenType::Alternate: name = "Alternate"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -4760,7 +4760,7 @@ Index: deepin-contour/src/vtbackend/primitives.h
              case ViMode::VisualBlock: name = "VisualBlock"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -5390,7 +5390,7 @@ Index: deepin-contour/src/vtrasterizer/FontDescriptions.h
              case vtrasterizer::TextStyle::BoldItalic: name = "BoldItalic"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -5405,7 +5405,7 @@ Index: deepin-contour/src/vtrasterizer/FontDescriptions.h
              case vtrasterizer::FontLocatorEngine::Mock: name = "Mock"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -5420,7 +5420,7 @@ Index: deepin-contour/src/vtrasterizer/FontDescriptions.h
              case vtrasterizer::TextShapingEngine::OpenShaper: name = "harfbuzz"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
  
@@ -5495,7 +5495,7 @@ Index: deepin-contour/src/vtrasterizer/Pixmap.h
  
  template <>
 -struct std::formatter<vtrasterizer::Arc>: std::formatter<string_view>
-+struct fmt::formatter<vtrasterizer::Arc>: fmt::formatter<string_view>
++struct fmt::formatter<vtrasterizer::Arc>: fmt::formatter<std::string_view>
  {
      auto format(vtrasterizer::Arc value, auto& ctx) const
      {
@@ -5504,7 +5504,7 @@ Index: deepin-contour/src/vtrasterizer/Pixmap.h
              case Arc::BottomRight: name = "BottomRight"; break;
          }
 -        return formatter<string_view>::format(name, ctx);
-+        return fmt::formatter<string_view>::format(name, ctx);
++        return fmt::formatter<std::string_view>::format(name, ctx);
      }
  };
 Index: deepin-contour/src/vtrasterizer/RenderTarget.h

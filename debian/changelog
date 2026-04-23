@@ -1,3 +1,11 @@
+contour (0.6.1.7494-1deepin7) unstable; urgency=medium
+
+  * Add fmt-compat.h shim to provide std::format/std::formatter for GCC
+    12. Fix patch to use std::string/std::string_view in fmt::formatter
+    contexts.
+
+ -- lichenggang <lichenggang@uniontech.com>  Thu, 23 Apr 2026 14:56:15 +0800
+
 contour (0.6.1.7494-1deepin6) unstable; urgency=medium
 
   * Fix use-fmt-instead-of-std-format.patch to also replace

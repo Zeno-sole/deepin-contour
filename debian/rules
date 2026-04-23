@@ -7,4 +7,5 @@ override_dh_auto_configure:
 	dh_auto_configure -- \
         -DCMAKE_BUILD_TYPE=Release \
         -DCONTOUR_QT_VERSION=6 \
-        -DCONTOUR_PACKAGE_TERMINFO=OFF
+        -DCONTOUR_PACKAGE_TERMINFO=OFF \
+        -DCMAKE_CXX_FLAGS="$(shell dpkg-buildflags --get CXXFLAGS) -include $(CURDIR)/debian/fmt-compat.h"

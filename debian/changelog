@@ -1,3 +1,11 @@
+contour (0.6.1.7494-1deepin1) unstable; urgency=medium
+
+  * Disable CONTOUR_PACKAGE_TERMINFO to avoid file conflict with ncurses-term
+    which already provides /usr/share/terminfo/c/contour.
+  * Add ncurses-term (>= 6.5+20250216-2) to Depends.
+
+ -- lichenggang <lichenggang@uniontech.com>  Wed, 22 Apr 2026 17:00:00 +0800
+
 contour (0.6.1.7494-1) unstable; urgency=medium
 
   * Initial release

@@ -1,3 +1,14 @@
+contour (0.6.1.7494-1deepin4) unstable; urgency=medium
+
+  * Add libfmt-dev to Build-Depends and fix patch file trailing newline.
+  * Switch to clang++-17 with libc++-17-dev. GCC 12's libstdc++ does not
+    include C++20 \u003cformat\u003e; libc++-17 provides it for clang.
+  * Add patch to replace C++20 std::format with fmt::format for GCC 12
+    compatibility. Revert clang-17 switch; use g++-12 with libfmt-dev
+    instead.
+
+ -- lichenggang <lichenggang@uniontech.com>  Thu, 23 Apr 2026 11:34:34 +0800
+
 contour (0.6.1.7494-1deepin3) unstable; urgency=medium
 
   * Add find_package(fmt) before libunicode to fix CMake config with

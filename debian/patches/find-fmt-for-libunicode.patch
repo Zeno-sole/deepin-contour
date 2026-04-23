@@ -21,3 +21,4 @@ Author: lichenggang <lichenggang@uniontech.com>
 +    find_package(fmt)
      HandleThirdparty(libunicode "gh:contour-terminal/libunicode#v${LIBUNICODE_MINIMAL_VERSION}")
  endif()
+

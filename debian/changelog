@@ -1,3 +1,11 @@
+contour (0.6.1.7494-1deepin5) unstable; urgency=medium
+
+  * Fix use-fmt-instead-of-std-format.patch to also replace
+    std::format_to, std::vformat, and std::make_format_args with fmt
+    equivalents.
+
+ -- lichenggang <lichenggang@uniontech.com>  Thu, 23 Apr 2026 13:53:09 +0800
+
 contour (0.6.1.7494-1deepin4) unstable; urgency=medium
 
   * Add libfmt-dev to Build-Depends and fix patch file trailing newline.

@@ -11,9 +11,10 @@ Description: Use fmt library instead of std::format for GCC 12 compatibility
  - formatter<T> (in std::formatter context) -> fmt::formatter<T>
 Author: lichenggang <lichenggang@uniontech.com>
 ---
-diff --git a/src/contour/Actions.h b/src/contour/Actions.h
---- a/src/contour/Actions.h
-+++ b/src/contour/Actions.h
+Index: deepin-contour/src/contour/Actions.h
+===================================================================
+--- deepin-contour.orig/src/contour/Actions.h
++++ deepin-contour/src/contour/Actions.h
 @@ -3,7 +3,7 @@
  
  #include <crispy/assert.h>
@@ -64,7 +65,7 @@ diff --git a/src/contour/Actions.h b/src/contour/Actions.h
  {
      auto format(contour::actions::Action const& _action, auto& ctx) const
      {
-@@ -482,26 +482,26 @@ struct std::formatter<contour::actions::Action>: std::formatter<std::string>
+@@ -482,26 +482,26 @@ struct std::formatter<contour::actions::
          if (std::holds_alternative<contour::actions::SwitchToTab>(_action))
          {
              const auto action = std::get<contour::actions::SwitchToTab>(_action);
@@ -96,7 +97,7 @@ diff --git a/src/contour/Actions.h b/src/contour/Actions.h
  {
      auto format(contour::actions::CopyFormat value, auto& ctx) const
      {
-@@ -513,7 +513,7 @@ struct std::formatter<contour::actions::CopyFormat>: std::formatter<std::string_
+@@ -513,7 +513,7 @@ struct std::formatter<contour::actions::
              case contour::actions::CopyFormat::PNG: output = "PNG"; break;
              case contour::actions::CopyFormat::VT: output = "VT"; break;
          }
@@ -105,9 +106,10 @@ diff --git a/src/contour/Actions.h b/src/contour/Actions.h
      }
  };
  
-diff --git a/src/contour/CaptureScreen.cpp b/src/contour/CaptureScreen.cpp
---- a/src/contour/CaptureScreen.cpp
-+++ b/src/contour/CaptureScreen.cpp
+Index: deepin-contour/src/contour/CaptureScreen.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/CaptureScreen.cpp
++++ deepin-contour/src/contour/CaptureScreen.cpp
 @@ -9,7 +9,7 @@
  #include <crispy/utils.h>
  
@@ -117,7 +119,7 @@ diff --git a/src/contour/CaptureScreen.cpp b/src/contour/CaptureScreen.cpp
  #include <fstream>
  #include <functional>
  #include <iostream>
-@@ -300,7 +300,7 @@ bool captureScreen(CaptureSettings const& settings)
+@@ -300,7 +300,7 @@ bool captureScreen(CaptureSettings const
      auto const [numColumns, numLines] = screenSizeOpt.value();
  
      if (settings.verbosityLevel > 0)
@@ -126,7 +128,7 @@ diff --git a/src/contour/CaptureScreen.cpp b/src/contour/CaptureScreen.cpp
                              numColumns,
                              numLines,
                              settings.logicalLines ? "logical" : "physical",
-@@ -317,7 +317,7 @@ bool captureScreen(CaptureSettings const& settings)
+@@ -317,7 +317,7 @@ bool captureScreen(CaptureSettings const
          output = *customOutput;
      }
  
@@ -135,9 +137,10 @@ diff --git a/src/contour/CaptureScreen.cpp b/src/contour/CaptureScreen.cpp
      {
          cerr << "Could not request screen capture.\r\n";
          return false;
-diff --git a/src/contour/Config.cpp b/src/contour/Config.cpp
---- a/src/contour/Config.cpp
-+++ b/src/contour/Config.cpp
+Index: deepin-contour/src/contour/Config.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/Config.cpp
++++ deepin-contour/src/contour/Config.cpp
 @@ -104,7 +104,7 @@ namespace
      {
          if (!fs::is_regular_file(path))
@@ -156,7 +159,7 @@ diff --git a/src/contour/Config.cpp b/src/contour/Config.cpp
                      return term;
      #endif
              }
-@@ -1480,7 +1480,7 @@ void YAMLConfigReader::defaultSettings(vtpty::Process::ExecInfo& shell)
+@@ -1480,7 +1480,7 @@ void YAMLConfigReader::defaultSettings(v
  {
      shell.env["TERMINAL_NAME"] = "contour";
      shell.env["TERMINAL_VERSION_TRIPLE"] =
@@ -165,7 +168,7 @@ diff --git a/src/contour/Config.cpp b/src/contour/Config.cpp
      shell.env["TERMINAL_VERSION_STRING"] = CONTOUR_VERSION_STRING;
  
      // {{{ Populate environment variables
-@@ -2166,7 +2166,7 @@ std::string createForProfile(Config const& c)
+@@ -2166,7 +2166,7 @@ std::string createForProfile(Config cons
          for (auto&& [name, entry]: c.profiles.value())
          {
              if constexpr (std::same_as<Writer, YAMLConfigWriter>)
@@ -174,7 +177,7 @@ diff --git a/src/contour/Config.cpp b/src/contour/Config.cpp
  
              writer.scoped([&]() { Reflection::CallOnMembers(entry, completeOverload); });
          }
-@@ -2188,7 +2188,7 @@ std::string createForColorScheme(Config const& c)
+@@ -2188,7 +2188,7 @@ std::string createForColorScheme(Config
      writer.scoped([&]() {
          for (auto&& [name, entry]: c.colorschemes.value())
          {
@@ -183,9 +186,10 @@ diff --git a/src/contour/Config.cpp b/src/contour/Config.cpp
              {
                  const auto _ = typename Writer::Offset {};
                  processWithDoc(documentation::DefaultColors {},
-diff --git a/src/contour/Config.h b/src/contour/Config.h
---- a/src/contour/Config.h
-+++ b/src/contour/Config.h
+Index: deepin-contour/src/contour/Config.h
+===================================================================
+--- deepin-contour.orig/src/contour/Config.h
++++ deepin-contour/src/contour/Config.h
 @@ -47,7 +47,7 @@
  #include <cstdint>
  #include <exception>
@@ -195,6 +199,15 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  #include <limits>
  #include <memory>
  #include <optional>
+@@ -1044,7 +1044,7 @@ struct Writer
+     template <typename... T>
+     [[nodiscard]] std::string format(std::string_view doc, T... args)
+     {
+-        return std::vformat(replaceCommentPlaceholder(std::string(doc)), std::make_format_args(args...));
++        return fmt::vformat(replaceCommentPlaceholder(std::string(doc)), fmt::make_format_args(args...));
+     }
+ 
+     [[nodiscard]] std::string format(KeyInputMapping v)
 @@ -1081,7 +1081,7 @@ struct Writer
      {
  
@@ -238,7 +251,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  
      [[nodiscard]] std::string format(std::string_view doc, vtbackend::ImageSize v)
      {
-@@ -1456,7 +1456,7 @@ std::string documentationProfileConfig();
+@@ -1456,7 +1456,7 @@ std::string documentationProfileConfig()
  // {{{ fmtlib custom formatter support
  
  template <>
@@ -247,7 +260,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  {
      auto format(contour::config::Permission value, auto& ctx) const
      {
-@@ -1467,30 +1467,30 @@ struct std::formatter<contour::config::Permission>: formatter<std::string_view>
+@@ -1467,30 +1467,30 @@ struct std::formatter<contour::config::P
              case contour::config::Permission::Deny: name = "deny"; break;
              case contour::config::Permission::Ask: name = "ask"; break;
          }
@@ -284,7 +297,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  {
      auto format(vtbackend::StatusDisplayPosition value, auto& ctx) const
      {
-@@ -1500,23 +1500,23 @@ struct std::formatter<vtbackend::StatusDisplayPosition>: formatter<std::string_v
+@@ -1500,23 +1500,23 @@ struct std::formatter<vtbackend::StatusD
              case vtbackend::StatusDisplayPosition::Bottom: name = "Bottom"; break;
              case vtbackend::StatusDisplayPosition::Top: name = "Top"; break;
          }
@@ -313,7 +326,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  {
      auto format(vtbackend::StatusDisplayType value, auto& ctx) const
      {
-@@ -1527,32 +1527,32 @@ struct std::formatter<vtbackend::StatusDisplayType>: formatter<std::string_view>
+@@ -1527,32 +1527,32 @@ struct std::formatter<vtbackend::StatusD
              case vtbackend::StatusDisplayType::Indicator: name = "indicator"; break;
              case vtbackend::StatusDisplayType::HostWritable: name = "host writable"; break;
          }
@@ -352,7 +365,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  {
      auto format(contour::config::SelectionAction value, auto& ctx) const
      {
-@@ -1565,12 +1565,12 @@ struct std::formatter<contour::config::SelectionAction>: formatter<std::string_v
+@@ -1565,12 +1565,12 @@ struct std::formatter<contour::config::S
                  break;
              case contour::config::SelectionAction::Nothing: name = "Waiting"; break;
          }
@@ -367,7 +380,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  {
      auto format(contour::config::ScrollBarPosition value, auto& ctx) const
      {
-@@ -1581,12 +1581,12 @@ struct std::formatter<contour::config::ScrollBarPosition>: formatter<std::string
+@@ -1581,12 +1581,12 @@ struct std::formatter<contour::config::S
              case contour::config::ScrollBarPosition::Left: name = "Left"; break;
              case contour::config::ScrollBarPosition::Right: name = "Right"; break;
          }
@@ -382,7 +395,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
  {
      auto format(contour::config::RenderingBackend const& val, auto& ctx) const
      {
-@@ -1597,17 +1597,17 @@ struct std::formatter<contour::config::RenderingBackend>: formatter<std::string_
+@@ -1597,17 +1597,17 @@ struct std::formatter<contour::config::R
              case contour::config::RenderingBackend::OpenGL: name = "OpenGL"; break;
              case contour::config::RenderingBackend::Software: name = "software"; break;
          }
@@ -403,7 +416,7 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
                                                ctx);
      }
  };
-@@ -1615,7 +1615,7 @@ struct std::formatter<contour::config::WindowMargins>: public std::formatter<std
+@@ -1615,7 +1615,7 @@ struct std::formatter<contour::config::W
  template <typename T,
            contour::config::documentation::StringLiteral ConfigDoc,
            contour::config::documentation::StringLiteral WebDoc>
@@ -412,9 +425,19 @@ diff --git a/src/contour/Config.h b/src/contour/Config.h
      contour::config::ConfigEntry<T, contour::config::documentation::DocumentationEntry<ConfigDoc, WebDoc>>>
  {
      auto format(contour::config::ConfigEntry<
-diff --git a/src/contour/ContourApp.cpp b/src/contour/ContourApp.cpp
---- a/src/contour/ContourApp.cpp
-+++ b/src/contour/ContourApp.cpp
+@@ -1623,7 +1623,7 @@ struct std::formatter<
+                     contour::config::documentation::DocumentationEntry<ConfigDoc, WebDoc>> const& c,
+                 auto& ctx) const
+     {
+-        return std::format_to(ctx.out(), "{}", c.value());
++        return fmt::format_to(ctx.out(), "{}", c.value());
+     }
+ };
+ // }}}
+Index: deepin-contour/src/contour/ContourApp.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/ContourApp.cpp
++++ deepin-contour/src/contour/ContourApp.cpp
 @@ -18,7 +18,7 @@
  #include <chrono>
  #include <csignal>
@@ -433,7 +456,7 @@ diff --git a/src/contour/ContourApp.cpp b/src/contour/ContourApp.cpp
              "contour-crash-{:%Y-%m-%d-%H-%M-%S}-pid-{}.log", std::chrono::system_clock::now(), getpid());
          if (chdir(crashLogDir.c_str()) < 0)
              perror("chdir");
-@@ -136,7 +136,7 @@ ContourApp::ContourApp(): app("contour", "Contour Terminal Emulator", CONTOUR_VE
+@@ -136,7 +136,7 @@ ContourApp::ContourApp(): app("contour",
      auto errorCode = std::error_code {};
      std::filesystem::create_directories(crashLogDirPath, errorCode);
      if (errorCode)
@@ -442,15 +465,101 @@ diff --git a/src/contour/ContourApp.cpp b/src/contour/ContourApp.cpp
                                   errorCode.message(),
                                   errorCode.category().name());
      // signal(SIGSEGV, segvHandler);
-@@ -215,7 +215,7 @@ int ContourApp::documentationVT()
+@@ -192,8 +192,8 @@ int ContourApp::documentationVT()
+ 
+     std::string info;
+     auto back = std::back_inserter(info);
+-    std::format_to(back, "# {}\n", "VT sequences");
+-    std::format_to(back, "{}\n\n", "List of VT sequences supported by Contour Terminal Emulator.");
++    fmt::format_to(back, "# {}\n", "VT sequences");
++    fmt::format_to(back, "{}\n\n", "List of VT sequences supported by Contour Terminal Emulator.");
+     for (auto const& [category, headline]: { std::pair { category::C0, "Control Codes"sv },
+                                              std::pair { category::ESC, "Escape Sequences"sv },
+                                              std::pair { category::CSI, "Control Sequences"sv },
+@@ -201,10 +201,10 @@ int ContourApp::documentationVT()
+                                              std::pair { category::DCS, "Device Control Sequences"sv } })
+     {
+ 
+-        std::format_to(back, "## {}\n\n", headline);
++        fmt::format_to(back, "## {}\n\n", headline);
+ 
+-        std::format_to(back, "| Sequence | Code | Description |\n");
+-        std::format_to(back, "|----------|------|-------------|\n");
++        fmt::format_to(back, "| Sequence | Code | Description |\n");
++        fmt::format_to(back, "|----------|------|-------------|\n");
+         for (auto const& fn: vtbackend::allFunctions())
+         {
+             if (fn.category != category)
+@@ -213,13 +213,13 @@ int ContourApp::documentationVT()
+             // This could be much more improved in good looking and informationally.
+             // We can also print short/longer description, minimum required VT level,
              // colored output for easier reading, and maybe more.
-             std::format_to(back,
+-            std::format_to(back,
++            fmt::format_to(back,
                             "| `{:}` | {:} | {:} |\n",
 -                           crispy::escapeMarkdown(std::format("{}", fn)),
 +                           crispy::escapeMarkdown(fmt::format("{}", fn)),
                             fn.documentation.mnemonic,
                             fn.documentation.comment);
          }
+-        std::format_to(back, "\n");
++        fmt::format_to(back, "\n");
+     }
+ 
+     std::cout << info;
+@@ -230,24 +230,24 @@ int ContourApp::documentationKeyMapping(
+ {
+     std::string info;
+     auto back = std::back_inserter(info);
+-    std::format_to(back, "{}\n\n", "List of supported actions for key mappings.");
++    fmt::format_to(back, "{}\n\n", "List of supported actions for key mappings.");
+ 
+-    std::format_to(back, "| Action | Description |\n");
+-    std::format_to(back, "|--------|-------------|\n");
++    fmt::format_to(back, "| Action | Description |\n");
++    fmt::format_to(back, "|--------|-------------|\n");
+     for (auto const& [action, description]: contour::actions::getDocumentation())
+     {
+-        std::format_to(back, "| `{:<20}` | {:} |\n", action, description);
++        fmt::format_to(back, "| `{:<20}` | {:} |\n", action, description);
+     }
+ 
+-    std::format_to(back, "\n");
+-    std::format_to(back, "Example of entries inside config file\n");
+-    std::format_to(back, "``` yaml\n");
++    fmt::format_to(back, "\n");
++    fmt::format_to(back, "Example of entries inside config file\n");
++    fmt::format_to(back, "``` yaml\n");
+     for (auto const& [action, description]: contour::actions::getDocumentation())
+     {
+-        std::format_to(back, " - {{ mods: [Control], key: Enter, action: {:} }}\n", action);
++        fmt::format_to(back, " - {{ mods: [Control], key: Enter, action: {:} }}\n", action);
+     }
+-    std::format_to(back, "```\n");
+-    std::format_to(back, "\n");
++    fmt::format_to(back, "```\n");
++    fmt::format_to(back, "\n");
+ 
+     std::cout << info;
+     return EXIT_SUCCESS;
+@@ -257,7 +257,7 @@ int ContourApp::documentationGlobalConfi
+ {
+     std::string configInfo;
+     auto back = std::back_inserter(configInfo);
+-    std::format_to(back, "{}\n", contour::config::documentationGlobalConfig());
++    fmt::format_to(back, "{}\n", contour::config::documentationGlobalConfig());
+ 
+     std::string_view const headerInfo = R"(# Configuring Contour
+ 
+@@ -363,7 +363,7 @@ int ContourApp::documentationProfileConf
+ {
+     std::string profileInfo;
+     auto back = std::back_inserter(profileInfo);
+-    std::format_to(back, "{}", contour::config::documentationProfileConfig());
++    fmt::format_to(back, "{}", contour::config::documentationProfileConfig());
+ 
+     std::cout << profileInfo;
+     return EXIT_SUCCESS;
 @@ -382,27 +382,27 @@ int ContourApp::infoVT()
                                               pair { category::OSC, "Operating System Commands"sv },
                                               pair { category::DCS, "Device Control Sequences"sv } })
@@ -504,10 +613,11 @@ diff --git a/src/contour/ContourApp.cpp b/src/contour/ContourApp.cpp
      return EXIT_SUCCESS;
  }
  
-diff --git a/src/contour/ContourGuiApp.cpp b/src/contour/ContourGuiApp.cpp
---- a/src/contour/ContourGuiApp.cpp
-+++ b/src/contour/ContourGuiApp.cpp
-@@ -258,10 +258,10 @@ bool ContourGuiApp::loadConfig(string const& target)
+Index: deepin-contour/src/contour/ContourGuiApp.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/ContourGuiApp.cpp
++++ deepin-contour/src/contour/ContourGuiApp.cpp
+@@ -258,10 +258,10 @@ bool ContourGuiApp::loadConfig(string co
                         end(_config.profiles.value()),
                         ""s,
                         [](string const& acc, auto const& profile) -> string {
@@ -536,9 +646,10 @@ diff --git a/src/contour/ContourGuiApp.cpp b/src/contour/ContourGuiApp.cpp
  
      return EXIT_SUCCESS;
  }
-diff --git a/src/contour/TerminalSession.cpp b/src/contour/TerminalSession.cpp
---- a/src/contour/TerminalSession.cpp
-+++ b/src/contour/TerminalSession.cpp
+Index: deepin-contour/src/contour/TerminalSession.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/TerminalSession.cpp
++++ deepin-contour/src/contour/TerminalSession.cpp
 @@ -67,7 +67,7 @@ namespace
  {
      string unhandledExceptionMessage(string_view const& where, exception const& e)
@@ -557,7 +668,7 @@ diff --git a/src/contour/TerminalSession.cpp b/src/contour/TerminalSession.cpp
          _terminal.writeToScreen("\r\n");
          _terminatedAndWaitingForKeyPress = true;
          return;
-@@ -1233,10 +1233,10 @@ bool TerminalSession::operator()(actions::SaveScreenshot)
+@@ -1233,10 +1233,10 @@ bool TerminalSession::operator()(actions
  {
      auto savePath =
          app().dumpStateAtExit().value_or(crispy::app::instance()->localStateDir())
@@ -570,7 +681,7 @@ diff --git a/src/contour/TerminalSession.cpp b/src/contour/TerminalSession.cpp
      sessionLog()(message);
  
      _display->post(
-@@ -1247,7 +1247,7 @@ bool TerminalSession::operator()(actions::SaveScreenshot)
+@@ -1247,7 +1247,7 @@ bool TerminalSession::operator()(actions
  bool TerminalSession::operator()(actions::CopyScreenshot)
  {
      _display->setScreenshotOutput(std::monostate {});
@@ -579,7 +690,7 @@ diff --git a/src/contour/TerminalSession.cpp b/src/contour/TerminalSession.cpp
      sessionLog()(message);
  
      _display->post(
-@@ -1708,7 +1708,7 @@ bool TerminalSession::reloadConfigWithProfile(string const& profileName)
+@@ -1708,7 +1708,7 @@ bool TerminalSession::reloadConfigWithPr
  
      if (!newConfig.profile(profileName))
      {
@@ -588,9 +699,10 @@ diff --git a/src/contour/TerminalSession.cpp b/src/contour/TerminalSession.cpp
          ++configFailures;
      }
  
-diff --git a/src/contour/TerminalSession.h b/src/contour/TerminalSession.h
---- a/src/contour/TerminalSession.h
-+++ b/src/contour/TerminalSession.h
+Index: deepin-contour/src/contour/TerminalSession.h
+===================================================================
+--- deepin-contour.orig/src/contour/TerminalSession.h
++++ deepin-contour/src/contour/TerminalSession.h
 @@ -18,7 +18,7 @@
  #include <QtQml/QJSValue>
  
@@ -600,7 +712,7 @@ diff --git a/src/contour/TerminalSession.h b/src/contour/TerminalSession.h
  #include <thread>
  
  #include <qcolor.h>
-@@ -488,7 +488,7 @@ class TerminalSession: public QAbstractItemModel, public vtbackend::Terminal::Ev
+@@ -488,7 +488,7 @@ class TerminalSession: public QAbstractI
  Q_DECLARE_INTERFACE(contour::TerminalSession, "org.contour.TerminalSession")
  
  template <>
@@ -609,7 +721,7 @@ diff --git a/src/contour/TerminalSession.h b/src/contour/TerminalSession.h
  {
      template <typename FormatContext>
      auto format(contour::GuardedRole value, FormatContext& ctx) const
-@@ -503,6 +503,6 @@ struct std::formatter<contour::GuardedRole>: std::formatter<std::string_view>
+@@ -503,6 +503,6 @@ struct std::formatter<contour::GuardedRo
              case contour::GuardedRole::BigPaste:  output = "paste large number of characters"; break;
          }
          // clang-format on
@@ -617,10 +729,11 @@ diff --git a/src/contour/TerminalSession.h b/src/contour/TerminalSession.h
 +        return fmt::formatter<string_view>::format(output, ctx);
      }
  };
-diff --git a/src/contour/TerminalSessionManager.cpp b/src/contour/TerminalSessionManager.cpp
---- a/src/contour/TerminalSessionManager.cpp
-+++ b/src/contour/TerminalSessionManager.cpp
-@@ -95,7 +95,7 @@ TerminalSession* TerminalSessionManager::createSessionInBackground()
+Index: deepin-contour/src/contour/TerminalSessionManager.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/TerminalSessionManager.cpp
++++ deepin-contour/src/contour/TerminalSessionManager.cpp
+@@ -95,7 +95,7 @@ TerminalSession* TerminalSessionManager:
  void TerminalSessionManager::setSession(size_t index)
  {
      Require(index <= _sessions.size());
@@ -629,7 +742,7 @@ diff --git a/src/contour/TerminalSessionManager.cpp b/src/contour/TerminalSessio
  
      if (!isAllowedToChangeTabs())
          return;
-@@ -163,7 +163,7 @@ void TerminalSessionManager::switchToPreviousTab()
+@@ -163,7 +163,7 @@ void TerminalSessionManager::switchToPre
  void TerminalSessionManager::switchToTabLeft()
  {
      const auto currentSessionIndex = getCurrentSessionIndex();
@@ -638,7 +751,7 @@ diff --git a/src/contour/TerminalSessionManager.cpp b/src/contour/TerminalSessio
                               currentSessionIndex,
                               _sessions.size()));
  
-@@ -181,7 +181,7 @@ void TerminalSessionManager::switchToTabRight()
+@@ -181,7 +181,7 @@ void TerminalSessionManager::switchToTab
  {
      const auto currentSessionIndex = getCurrentSessionIndex();
  
@@ -647,9 +760,10 @@ diff --git a/src/contour/TerminalSessionManager.cpp b/src/contour/TerminalSessio
          "NEXT TAB: currentSessionIndex: {}, _sessions.size(): {}", currentSessionIndex, _sessions.size()));
      if (std::cmp_less(currentSessionIndex, _sessions.size() - 1))
      {
-diff --git a/src/contour/display/Blur.cpp b/src/contour/display/Blur.cpp
---- a/src/contour/display/Blur.cpp
-+++ b/src/contour/display/Blur.cpp
+Index: deepin-contour/src/contour/display/Blur.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/display/Blur.cpp
++++ deepin-contour/src/contour/display/Blur.cpp
 @@ -26,7 +26,7 @@ namespace
      {
          displayLog()("Blur: Loading shader source {}", shaderFilePath.toStdString());
@@ -659,10 +773,11 @@ diff --git a/src/contour/display/Blur.cpp b/src/contour/display/Blur.cpp
  
          QFile file(shaderFilePath);
          file.open(QFile::ReadOnly);
-diff --git a/src/contour/display/ShaderConfig.cpp b/src/contour/display/ShaderConfig.cpp
---- a/src/contour/display/ShaderConfig.cpp
-+++ b/src/contour/display/ShaderConfig.cpp
-@@ -71,7 +71,7 @@ ShaderConfig builtinShaderConfig(ShaderClass shaderClass)
+Index: deepin-contour/src/contour/display/ShaderConfig.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/display/ShaderConfig.cpp
++++ deepin-contour/src/contour/display/ShaderConfig.cpp
+@@ -71,7 +71,7 @@ ShaderConfig builtinShaderConfig(ShaderC
              sharedDefinesFile.open(QFile::ReadOnly);
              Require(sharedDefinesFile.isOpen());
              auto const sharedDefines = sharedDefinesFile.readAll().toStdString() + "\n#line 1\n";
@@ -671,9 +786,10 @@ diff --git a/src/contour/display/ShaderConfig.cpp b/src/contour/display/ShaderCo
  
              auto const shaderFilePath = ":/contour/display/shaders/" + filename;
  
-diff --git a/src/contour/display/ShaderConfig.h b/src/contour/display/ShaderConfig.h
---- a/src/contour/display/ShaderConfig.h
-+++ b/src/contour/display/ShaderConfig.h
+Index: deepin-contour/src/contour/display/ShaderConfig.h
+===================================================================
+--- deepin-contour.orig/src/contour/display/ShaderConfig.h
++++ deepin-contour/src/contour/display/ShaderConfig.h
 @@ -5,7 +5,7 @@
  
  #include <QtCore/QtGlobal>
@@ -683,9 +799,10 @@ diff --git a/src/contour/display/ShaderConfig.h b/src/contour/display/ShaderConf
  
  #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
      #include <QtGui/QSurfaceFormat>
-diff --git a/src/contour/display/TerminalDisplay.cpp b/src/contour/display/TerminalDisplay.cpp
---- a/src/contour/display/TerminalDisplay.cpp
-+++ b/src/contour/display/TerminalDisplay.cpp
+Index: deepin-contour/src/contour/display/TerminalDisplay.cpp
+===================================================================
+--- deepin-contour.orig/src/contour/display/TerminalDisplay.cpp
++++ deepin-contour/src/contour/display/TerminalDisplay.cpp
 @@ -36,7 +36,7 @@
  
  #include <chrono>
@@ -731,7 +848,7 @@ diff --git a/src/contour/display/TerminalDisplay.cpp b/src/contour/display/Termi
      }
  
      void reportUnhandledException(std::string_view const& where, exception const& e)
-@@ -288,8 +288,8 @@ void TerminalDisplay::setSession(TerminalSession* newSession)
+@@ -288,8 +288,8 @@ void TerminalDisplay::setSession(Termina
                   (void const*) this,
                   (void const*) newSession,
                   newSession->profile().ssh.value().hostname.empty()
@@ -742,7 +859,7 @@ diff --git a/src/contour/display/TerminalDisplay.cpp b/src/contour/display/Termi
                                     newSession->profile().ssh.value().username,
                                     newSession->profile().ssh.value().hostname,
                                     newSession->profile().ssh.value().port),
-@@ -930,7 +930,7 @@ bool TerminalDisplay::event(QEvent* event)
+@@ -930,7 +930,7 @@ bool TerminalDisplay::event(QEvent* even
      }
      catch (std::exception const& e)
      {
@@ -751,7 +868,7 @@ diff --git a/src/contour/display/TerminalDisplay.cpp b/src/contour/display/Termi
                                   (unsigned) event->type(),
                                   QMetaEnum::fromType<QEvent::Type>().valueToKey(event->type()));
          reportUnhandledException(__PRETTY_FUNCTION__, e);
-@@ -1154,7 +1154,7 @@ void TerminalDisplay::doDumpStateInternal()
+@@ -1154,7 +1154,7 @@ void TerminalDisplay::doDumpStateInterna
  
      // clang-format off
      auto const targetBaseDir = _session->app().dumpStateAtExit().value_or(crispy::app::instance()->localStateDir() / "dump");
@@ -760,9 +877,10 @@ diff --git a/src/contour/display/TerminalDisplay.cpp b/src/contour/display/Termi
      auto const targetDir = targetBaseDir / workDirName;
      auto const latestDirName = fs::path("latest");
      // clang-format on
-diff --git a/src/contour/helper.h b/src/contour/helper.h
---- a/src/contour/helper.h
-+++ b/src/contour/helper.h
+Index: deepin-contour/src/contour/helper.h
+===================================================================
+--- deepin-contour.orig/src/contour/helper.h
++++ deepin-contour/src/contour/helper.h
 @@ -308,7 +308,7 @@ struct RenderStateManager
  } // namespace contour
  
@@ -772,7 +890,7 @@ diff --git a/src/contour/helper.h b/src/contour/helper.h
  {
      using State = contour::RenderState;
      auto format(State state, auto& ctx) const
-@@ -321,6 +321,6 @@ struct std::formatter<contour::RenderState>: std::formatter<string_view>
+@@ -321,6 +321,6 @@ struct std::formatter<contour::RenderSta
              case State::DirtyIdle: name = "dirty-idle"; break;
              case State::DirtyPainting: name = "dirty-painting"; break;
          }
@@ -780,9 +898,10 @@ diff --git a/src/contour/helper.h b/src/contour/helper.h
 +        return fmt::formatter<string_view>::format(name, ctx);
      }
  };
-diff --git a/src/crispy/App.cpp b/src/crispy/App.cpp
---- a/src/crispy/App.cpp
-+++ b/src/crispy/App.cpp
+Index: deepin-contour/src/crispy/App.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/App.cpp
++++ deepin-contour/src/crispy/App.cpp
 @@ -9,7 +9,7 @@
  #include <array>
  #include <chrono>
@@ -801,7 +920,7 @@ diff --git a/src/crispy/App.cpp b/src/crispy/App.cpp
      return EXIT_SUCCESS;
  }
  
-@@ -219,9 +219,9 @@ int app::run(int argc, char const* argv[])
+@@ -219,9 +219,9 @@ int app::run(int argc, char const* argv[
          }
          _flags = std::move(flagsOpt.value());
  
@@ -813,7 +932,7 @@ diff --git a/src/crispy/App.cpp b/src/crispy/App.cpp
  
          for (auto const& [name, handler]: _handlers)
              if (parameters().get<bool>(name))
-@@ -232,7 +232,7 @@ int app::run(int argc, char const* argv[])
+@@ -232,7 +232,7 @@ int app::run(int argc, char const* argv[
      }
      catch (exception const& e)
      {
@@ -851,9 +970,10 @@ diff --git a/src/crispy/App.cpp b/src/crispy/App.cpp
                  result += sgrReset;
              }
  
-diff --git a/src/crispy/CLI.cpp b/src/crispy/CLI.cpp
---- a/src/crispy/CLI.cpp
-+++ b/src/crispy/CLI.cpp
+Index: deepin-contour/src/crispy/CLI.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/CLI.cpp
++++ deepin-contour/src/crispy/CLI.cpp
 @@ -162,7 +162,7 @@ namespace // {{{ helper
          if (context.pos >= context.args.size())
              throw parser_error("Not enough arguments specified.");
@@ -929,7 +1049,7 @@ diff --git a/src/crispy/CLI.cpp b/src/crispy/CLI.cpp
              if (context.output.get<bool>(commandKey))
                  validate(subcmd, context, key);
          }
-@@ -501,9 +501,9 @@ optional<flag_store> parse(command const& command, string_view_list const& args)
+@@ -501,9 +501,9 @@ optional<flag_store> parse(command const
          return nullopt;
  
      // auto const& flags = context.output;
@@ -950,9 +1070,10 @@ diff --git a/src/crispy/CLI.cpp b/src/crispy/CLI.cpp
  
              string output;
              size_t a = 0;
-diff --git a/src/crispy/CLI.h b/src/crispy/CLI.h
---- a/src/crispy/CLI.h
-+++ b/src/crispy/CLI.h
+Index: deepin-contour/src/crispy/CLI.h
+===================================================================
+--- deepin-contour.orig/src/crispy/CLI.h
++++ deepin-contour/src/crispy/CLI.h
 @@ -4,7 +4,7 @@
  #include <crispy/utils.h>
  
@@ -962,7 +1083,7 @@ diff --git a/src/crispy/CLI.h b/src/crispy/CLI.h
  #include <map>
  #include <optional>
  #include <stdexcept>
-@@ -225,7 +225,7 @@ namespace about
+@@ -225,24 +225,24 @@ namespace about
  
  // {{{ type formatters
  template <>
@@ -971,9 +1092,34 @@ diff --git a/src/crispy/CLI.h b/src/crispy/CLI.h
  {
      auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return ctx.begin(); }
      auto format(crispy::cli::value const& value, auto& ctx) const
-diff --git a/src/crispy/CLI_test.cpp b/src/crispy/CLI_test.cpp
---- a/src/crispy/CLI_test.cpp
-+++ b/src/crispy/CLI_test.cpp
+     {
+         if (std::holds_alternative<bool>(value))
+-            return std::format_to(ctx.out(), "{}", std::get<bool>(value));
++            return fmt::format_to(ctx.out(), "{}", std::get<bool>(value));
+         else if (std::holds_alternative<int>(value))
+-            return std::format_to(ctx.out(), "{}", std::get<int>(value));
++            return fmt::format_to(ctx.out(), "{}", std::get<int>(value));
+         else if (std::holds_alternative<unsigned>(value))
+-            return std::format_to(ctx.out(), "{}", std::get<unsigned>(value));
++            return fmt::format_to(ctx.out(), "{}", std::get<unsigned>(value));
+         else if (std::holds_alternative<double>(value))
+-            return std::format_to(ctx.out(), "{}", std::get<double>(value));
++            return fmt::format_to(ctx.out(), "{}", std::get<double>(value));
+         else if (std::holds_alternative<std::string>(value))
+-            return std::format_to(ctx.out(), "{}", std::get<std::string>(value));
++            return fmt::format_to(ctx.out(), "{}", std::get<std::string>(value));
+         else
+-            return std::format_to(ctx.out(), "?");
+-        // return std::format_to(ctx.out(), "{}..{}", range.from, range.to);
++            return fmt::format_to(ctx.out(), "?");
++        // return fmt::format_to(ctx.out(), "{}..{}", range.from, range.to);
+     }
+ };
+ // }}} namespace fmt
+Index: deepin-contour/src/crispy/CLI_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/CLI_test.cpp
++++ deepin-contour/src/crispy/CLI_test.cpp
 @@ -3,7 +3,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -983,9 +1129,10 @@ diff --git a/src/crispy/CLI_test.cpp b/src/crispy/CLI_test.cpp
  
  // TODO API / impl:
  //
-diff --git a/src/crispy/LRUCache_test.cpp b/src/crispy/LRUCache_test.cpp
---- a/src/crispy/LRUCache_test.cpp
-+++ b/src/crispy/LRUCache_test.cpp
+Index: deepin-contour/src/crispy/LRUCache_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/LRUCache_test.cpp
++++ deepin-contour/src/crispy/LRUCache_test.cpp
 @@ -3,7 +3,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -995,7 +1142,7 @@ diff --git a/src/crispy/LRUCache_test.cpp b/src/crispy/LRUCache_test.cpp
  #include <functional>
  #include <iostream>
  
-@@ -15,10 +15,10 @@ using namespace std::string_view_literals;
+@@ -15,10 +15,10 @@ using namespace std::string_view_literal
  // {
  //     std::ostream& out = std::cout;
  //
@@ -1008,7 +1155,7 @@ diff --git a/src/crispy/LRUCache_test.cpp b/src/crispy/LRUCache_test.cpp
  //     }
  //     out << "\n";
  // }
-@@ -32,7 +32,7 @@ static std::string join(std::vector<T> const& list, std::string_view delimiter =
+@@ -32,7 +32,7 @@ static std::string join(std::vector<T> c
          if (i)
              s += delimiter;
          auto val = list[i];
@@ -1017,9 +1164,10 @@ diff --git a/src/crispy/LRUCache_test.cpp b/src/crispy/LRUCache_test.cpp
      }
      return s;
  }
-diff --git a/src/crispy/StackTrace.cpp b/src/crispy/StackTrace.cpp
---- a/src/crispy/StackTrace.cpp
-+++ b/src/crispy/StackTrace.cpp
+Index: deepin-contour/src/crispy/StackTrace.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/StackTrace.cpp
++++ deepin-contour/src/crispy/StackTrace.cpp
 @@ -4,7 +4,7 @@
  #include <cctype>
  #include <cstdlib>
@@ -1029,7 +1177,7 @@ diff --git a/src/crispy/StackTrace.cpp b/src/crispy/StackTrace.cpp
  #include <optional>
  #include <regex>
  
-@@ -208,11 +208,11 @@ vector<string> stack_trace::symbols() const
+@@ -208,11 +208,11 @@ vector<string> stack_trace::symbols() co
  #if defined(CONTOUR_STACKTRACE_ADDR2LINE)
          auto debugInfo = getDebugInfoForFrame(frame);
          if (!debugInfo)
@@ -1043,10 +1191,11 @@ diff --git a/src/crispy/StackTrace.cpp b/src/crispy/StackTrace.cpp
  #endif
      }
      return output;
-diff --git a/src/crispy/StrongHash.h b/src/crispy/StrongHash.h
---- a/src/crispy/StrongHash.h
-+++ b/src/crispy/StrongHash.h
-@@ -204,7 +204,7 @@ inline std::string to_string(strong_hash const& hash)
+Index: deepin-contour/src/crispy/StrongHash.h
+===================================================================
+--- deepin-contour.orig/src/crispy/StrongHash.h
++++ deepin-contour/src/crispy/StrongHash.h
+@@ -204,7 +204,7 @@ inline std::string to_string(strong_hash
  {
      uint32_t u32[4];
      std::memcpy(u32, &hash, sizeof(hash));
@@ -1055,7 +1204,7 @@ diff --git a/src/crispy/StrongHash.h b/src/crispy/StrongHash.h
  }
  
  inline std::string to_structured_string(strong_hash const& hash)
-@@ -218,7 +218,7 @@ inline std::string to_structured_string(strong_hash const& hash)
+@@ -218,7 +218,7 @@ inline std::string to_structured_string(
          if (!s.empty())
              s += '.';
          if (u32[i] != 0)
@@ -1064,7 +1213,7 @@ diff --git a/src/crispy/StrongHash.h b/src/crispy/StrongHash.h
      }
      return s;
  }
-@@ -300,7 +300,7 @@ struct strong_hasher<std::basic_string_view<U>>
+@@ -300,7 +300,7 @@ struct strong_hasher<std::basic_string_v
  } // namespace crispy
  
  template <>
@@ -1073,10 +1222,19 @@ diff --git a/src/crispy/StrongHash.h b/src/crispy/StrongHash.h
  {
      template <typename ParseContext>
      constexpr auto parse(ParseContext& ctx)
-diff --git a/src/crispy/StrongLRUCache.h b/src/crispy/StrongLRUCache.h
---- a/src/crispy/StrongLRUCache.h
-+++ b/src/crispy/StrongLRUCache.h
-@@ -240,7 +240,7 @@ void strong_lru_cache<Key, Value, Hasher>::inspect(std::ostream& output) const
+@@ -310,6 +310,6 @@ struct std::formatter<crispy::strong_has
+     template <typename FormatContext>
+     auto format(crispy::strong_hash const& hash, FormatContext& ctx) const
+     {
+-        return std::format_to(ctx.out(), "{}", to_structured_string(hash));
++        return fmt::format_to(ctx.out(), "{}", to_structured_string(hash));
+     }
+ };
+Index: deepin-contour/src/crispy/StrongLRUCache.h
+===================================================================
+--- deepin-contour.orig/src/crispy/StrongLRUCache.h
++++ deepin-contour/src/crispy/StrongLRUCache.h
+@@ -240,12 +240,12 @@ void strong_lru_cache<Key, Value, Hasher
  
  // {{{ fmt
  template <typename K, typename V>
@@ -1085,9 +1243,16 @@ diff --git a/src/crispy/StrongLRUCache.h b/src/crispy/StrongLRUCache.h
  {
      auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return ctx.begin(); }
      auto format(crispy::detail::lru_cache_entry<K, V> const& entry, auto& ctx) const
-diff --git a/src/crispy/StrongLRUHashtable.h b/src/crispy/StrongLRUHashtable.h
---- a/src/crispy/StrongLRUHashtable.h
-+++ b/src/crispy/StrongLRUHashtable.h
+     {
+-        return std::format_to(ctx.out(), "{}: {}", entry.key, entry.value);
++        return fmt::format_to(ctx.out(), "{}: {}", entry.key, entry.value);
+     }
+ };
+ // }}}
+Index: deepin-contour/src/crispy/StrongLRUHashtable.h
+===================================================================
+--- deepin-contour.orig/src/crispy/StrongLRUHashtable.h
++++ deepin-contour/src/crispy/StrongLRUHashtable.h
 @@ -40,12 +40,12 @@ struct lru_hashtable_stats
  
  // {{{ fmt
@@ -1104,7 +1269,7 @@ diff --git a/src/crispy/StrongLRUHashtable.h b/src/crispy/StrongLRUHashtable.h
                  "{} hits, {} misses, {} evictions, {:.3}% hit rate",
                  stats.hits,
                  stats.misses,
-@@ -673,12 +673,12 @@ void strong_lru_hashtable<Value>::inspect(std::ostream& output) const
+@@ -673,12 +673,12 @@ void strong_lru_hashtable<Value>::inspec
      while (entryIndex != 0)
      {
          entry const& entry = _entries[entryIndex];
@@ -1119,7 +1284,7 @@ diff --git a/src/crispy/StrongLRUHashtable.h b/src/crispy/StrongLRUHashtable.h
          //                       "nullopt");
          if (entry.nextWithSameHash)
              ++hashSlotCollisions;
-@@ -692,24 +692,24 @@ void strong_lru_hashtable<Value>::inspect(std::ostream& output) const
+@@ -692,24 +692,24 @@ void strong_lru_hashtable<Value>::inspec
          if (dr >= 99.99)
              return "100%";
          else
@@ -1154,10 +1319,11 @@ diff --git a/src/crispy/StrongLRUHashtable.h b/src/crispy/StrongLRUHashtable.h
  }
  
  // {{{ helpers
-diff --git a/src/crispy/StrongLRUHashtable_test.cpp b/src/crispy/StrongLRUHashtable_test.cpp
---- a/src/crispy/StrongLRUHashtable_test.cpp
-+++ b/src/crispy/StrongLRUHashtable_test.cpp
-@@ -407,7 +407,7 @@ TEST_CASE("strong_lru_hashtable.peek", "")
+Index: deepin-contour/src/crispy/StrongLRUHashtable_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/StrongLRUHashtable_test.cpp
++++ deepin-contour/src/crispy/StrongLRUHashtable_test.cpp
+@@ -407,7 +407,7 @@ TEST_CASE("strong_lru_hashtable.peek", "
  
      for (int i = 1; i <= 4; ++i)
      {
@@ -1166,9 +1332,10 @@ diff --git a/src/crispy/StrongLRUHashtable_test.cpp b/src/crispy/StrongLRUHashta
          REQUIRE(cache.peek(h(1)) == 2);
          REQUIRE(joinHumanReadable(cache.hashes()) == sh(4, 3, 2, 1));
      }
-diff --git a/src/crispy/assert.h b/src/crispy/assert.h
---- a/src/crispy/assert.h
-+++ b/src/crispy/assert.h
+Index: deepin-contour/src/crispy/assert.h
+===================================================================
+--- deepin-contour.orig/src/crispy/assert.h
++++ deepin-contour/src/crispy/assert.h
 @@ -4,7 +4,7 @@
  #include <crispy/logstore.h>
  
@@ -1187,7 +1354,7 @@ diff --git a/src/crispy/assert.h b/src/crispy/assert.h
          }
          catch (...) // NOLINT(bugprone-empty-catch)
          {
-@@ -85,9 +85,9 @@ inline void set_fail_handler(fail_handler_t handler)
+@@ -85,9 +85,9 @@ inline void set_fail_handler(fail_handle
  /// This method prints an error message and then terminates the program.
  [[noreturn]] inline void todo(std::string_view message = {})
  {
@@ -1199,9 +1366,10 @@ diff --git a/src/crispy/assert.h b/src/crispy/assert.h
      std::abort();
  }
  
-diff --git a/src/crispy/escape.h b/src/crispy/escape.h
---- a/src/crispy/escape.h
-+++ b/src/crispy/escape.h
+Index: deepin-contour/src/crispy/escape.h
+===================================================================
+--- deepin-contour.orig/src/crispy/escape.h
++++ deepin-contour/src/crispy/escape.h
 @@ -4,7 +4,7 @@
  #include <algorithm>
  #include <cctype>
@@ -1211,7 +1379,7 @@ diff --git a/src/crispy/escape.h b/src/crispy/escape.h
  #include <iterator>
  #include <numeric>
  #include <string>
-@@ -31,11 +31,11 @@ inline std::string escape(uint8_t ch, numeric_escape numericEscape = numeric_esc
+@@ -31,11 +31,11 @@ inline std::string escape(uint8_t ch, nu
          case '"': return "\\\"";
          default:
              if (0x20 <= ch && ch < 0x7E)
@@ -1226,7 +1394,7 @@ diff --git a/src/crispy/escape.h b/src/crispy/escape.h
      }
  }
  
-@@ -62,7 +62,7 @@ inline std::string escapeMarkdown(T begin, T end)
+@@ -62,7 +62,7 @@ inline std::string escapeMarkdown(T begi
      auto escapeMarkdown = [](uint8_t ch) -> std::string {
          if (ch == '`')
              return "``` ";
@@ -1235,9 +1403,10 @@ diff --git a/src/crispy/escape.h b/src/crispy/escape.h
      };
      auto result = std::string {};
      for (T cur = begin; cur != end; ++cur)
-diff --git a/src/crispy/file_descriptor.h b/src/crispy/file_descriptor.h
---- a/src/crispy/file_descriptor.h
-+++ b/src/crispy/file_descriptor.h
+Index: deepin-contour/src/crispy/file_descriptor.h
+===================================================================
+--- deepin-contour.orig/src/crispy/file_descriptor.h
++++ deepin-contour/src/crispy/file_descriptor.h
 @@ -1,7 +1,7 @@
  // SPDX-License-Identifier: Apache-2.0
  #pragma once
@@ -1247,7 +1416,7 @@ diff --git a/src/crispy/file_descriptor.h b/src/crispy/file_descriptor.h
  #include <system_error>
  
  #if defined(_WIN32)
-@@ -118,21 +118,21 @@ using file_descriptor = native_handle<int, -1>;
+@@ -118,21 +118,21 @@ using file_descriptor = native_handle<in
  
  #if defined(_WIN32)
  template <>
@@ -1274,9 +1443,10 @@ diff --git a/src/crispy/file_descriptor.h b/src/crispy/file_descriptor.h
 +        return fmt::formatter<crispy::file_descriptor::native_handle_type>::format(fd.get(), ctx);
      }
  };
-diff --git a/src/crispy/flags.h b/src/crispy/flags.h
---- a/src/crispy/flags.h
-+++ b/src/crispy/flags.h
+Index: deepin-contour/src/crispy/flags.h
+===================================================================
+--- deepin-contour.orig/src/crispy/flags.h
++++ deepin-contour/src/crispy/flags.h
 @@ -1,7 +1,7 @@
  // SPDX-License-Identifier: Apache-2.0
  #pragma once
@@ -1295,7 +1465,7 @@ diff --git a/src/crispy/flags.h b/src/crispy/flags.h
  {
      auto format(crispy::flags<Enum> const& flags, auto& ctx) const
      {
-@@ -154,7 +154,7 @@ struct std::formatter<crispy::flags<Enum>>: public std::formatter<std::string>
+@@ -154,7 +154,7 @@ struct std::formatter<crispy::flags<Enum
                  continue;
  
              // We assume that only valid enum values resulting into non-empty strings.
@@ -1304,7 +1474,7 @@ diff --git a/src/crispy/flags.h b/src/crispy/flags.h
              if (element.empty())
                  continue;
  
-@@ -163,6 +163,6 @@ struct std::formatter<crispy::flags<Enum>>: public std::formatter<std::string>
+@@ -163,6 +163,6 @@ struct std::formatter<crispy::flags<Enum
  
              result += element;
          }
@@ -1312,9 +1482,10 @@ diff --git a/src/crispy/flags.h b/src/crispy/flags.h
 +        return fmt::formatter<std::string>::format(result, ctx);
      }
  };
-diff --git a/src/crispy/interpolated_string_test.cpp b/src/crispy/interpolated_string_test.cpp
---- a/src/crispy/interpolated_string_test.cpp
-+++ b/src/crispy/interpolated_string_test.cpp
+Index: deepin-contour/src/crispy/interpolated_string_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/interpolated_string_test.cpp
++++ deepin-contour/src/crispy/interpolated_string_test.cpp
 @@ -2,7 +2,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -1324,9 +1495,10 @@ diff --git a/src/crispy/interpolated_string_test.cpp b/src/crispy/interpolated_s
  
  TEST_CASE("interpolated_string.parse_interpolation")
  {
-diff --git a/src/crispy/logstore.h b/src/crispy/logstore.h
---- a/src/crispy/logstore.h
-+++ b/src/crispy/logstore.h
+Index: deepin-contour/src/crispy/logstore.h
+===================================================================
+--- deepin-contour.orig/src/crispy/logstore.h
++++ deepin-contour/src/crispy/logstore.h
 @@ -8,7 +8,7 @@
  
  #include <algorithm>
@@ -1336,6 +1508,24 @@ diff --git a/src/crispy/logstore.h b/src/crispy/logstore.h
  #include <functional>
  #include <iostream>
  #include <iterator>
+@@ -95,7 +95,7 @@ class message_builder
+     template <typename... Ts>
+     message_builder& append(std::string_view fmt, Ts const&... args)
+     {
+-        _buffer += std::vformat(fmt, std::make_format_args(args...));
++        _buffer += fmt::vformat(fmt, fmt::make_format_args(args...));
+         return *this;
+     }
+ 
+@@ -108,7 +108,7 @@ class message_builder
+     template <typename... Ts>
+     message_builder& operator()(std::string_view fmt, Ts const&... args)
+     {
+-        _buffer += std::vformat(fmt, std::make_format_args(args...));
++        _buffer += fmt::vformat(fmt, fmt::make_format_args(args...));
+         return *this;
+     }
+ 
 @@ -330,7 +330,7 @@ inline category::~category()
  
  inline std::string category::defaultFormatter(message_builder const& message)
@@ -1345,9 +1535,10 @@ diff --git a/src/crispy/logstore.h b/src/crispy/logstore.h
                         message.get_category().name(),
                         message.location().file_name(),
                         message.location().line(),
-diff --git a/src/crispy/point.h b/src/crispy/point.h
---- a/src/crispy/point.h
-+++ b/src/crispy/point.h
+Index: deepin-contour/src/crispy/point.h
+===================================================================
+--- deepin-contour.orig/src/crispy/point.h
++++ deepin-contour/src/crispy/point.h
 @@ -1,7 +1,7 @@
  // SPDX-License-Identifier: Apache-2.0
  #pragma once
@@ -1357,7 +1548,7 @@ diff --git a/src/crispy/point.h b/src/crispy/point.h
  #include <ostream>
  
  namespace crispy
-@@ -86,10 +86,10 @@ constexpr inline bool operator!=(point const& a, point const& b) noexcept
+@@ -86,10 +86,10 @@ constexpr inline bool operator!=(point c
  } // namespace crispy
  
  template <>
@@ -1370,9 +1561,10 @@ diff --git a/src/crispy/point.h b/src/crispy/point.h
 +        return fmt::formatter<std::string>::format(fmt::format("({}, {})", coord.x, coord.y), ctx);
      }
  };
-diff --git a/src/crispy/result_test.cpp b/src/crispy/result_test.cpp
---- a/src/crispy/result_test.cpp
-+++ b/src/crispy/result_test.cpp
+Index: deepin-contour/src/crispy/result_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/result_test.cpp
++++ deepin-contour/src/crispy/result_test.cpp
 @@ -3,7 +3,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -1382,9 +1574,10 @@ diff --git a/src/crispy/result_test.cpp b/src/crispy/result_test.cpp
  #include <type_traits>
  
  using crispy::failure;
-diff --git a/src/crispy/ring_test.cpp b/src/crispy/ring_test.cpp
---- a/src/crispy/ring_test.cpp
-+++ b/src/crispy/ring_test.cpp
+Index: deepin-contour/src/crispy/ring_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/ring_test.cpp
++++ deepin-contour/src/crispy/ring_test.cpp
 @@ -4,7 +4,7 @@
  #include <catch2/catch_test_macros.hpp>
  
@@ -1413,9 +1606,10 @@ diff --git a/src/crispy/ring_test.cpp b/src/crispy/ring_test.cpp
  }
  } // namespace
  
-diff --git a/src/crispy/size.h b/src/crispy/size.h
---- a/src/crispy/size.h
-+++ b/src/crispy/size.h
+Index: deepin-contour/src/crispy/size.h
+===================================================================
+--- deepin-contour.orig/src/crispy/size.h
++++ deepin-contour/src/crispy/size.h
 @@ -3,7 +3,7 @@
  #include <crispy/point.h>
  
@@ -1425,7 +1619,7 @@ diff --git a/src/crispy/size.h b/src/crispy/size.h
  #include <utility>
  
  namespace crispy
-@@ -112,7 +112,7 @@ constexpr size operator/(size a, size b) noexcept
+@@ -112,11 +112,11 @@ constexpr size operator/(size a, size b)
  } // end namespace crispy
  
  template <>
@@ -1434,9 +1628,15 @@ diff --git a/src/crispy/size.h b/src/crispy/size.h
  {
      auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return ctx.begin(); }
      auto format(const crispy::size& value, auto& ctx) const
-diff --git a/src/crispy/utils.h b/src/crispy/utils.h
---- a/src/crispy/utils.h
-+++ b/src/crispy/utils.h
+     {
+-        return std::format_to(ctx.out(), "{}x{}", value.width, value.height);
++        return fmt::format_to(ctx.out(), "{}x{}", value.width, value.height);
+     }
+ };
+Index: deepin-contour/src/crispy/utils.h
+===================================================================
+--- deepin-contour.orig/src/crispy/utils.h
++++ deepin-contour/src/crispy/utils.h
 @@ -8,7 +8,7 @@
  
  #include <algorithm>
@@ -1446,7 +1646,7 @@ diff --git a/src/crispy/utils.h b/src/crispy/utils.h
  #include <fstream>
  #include <functional>
  #include <mutex>
-@@ -98,7 +98,7 @@ std::string joinHumanReadable(std::vector<T> const& list, std::string_view sep =
+@@ -98,7 +98,7 @@ std::string joinHumanReadable(std::vecto
      {
          if (i != 0)
              result << sep;
@@ -1455,7 +1655,7 @@ diff --git a/src/crispy/utils.h b/src/crispy/utils.h
      }
      return result.str();
  }
-@@ -111,7 +111,7 @@ std::string joinHumanReadableQuoted(std::vector<T> const& list, U sep = ", ")
+@@ -111,7 +111,7 @@ std::string joinHumanReadableQuoted(std:
      {
          if (i != 0)
              result << sep;
@@ -1464,7 +1664,7 @@ diff --git a/src/crispy/utils.h b/src/crispy/utils.h
      }
      return result.str();
  }
-@@ -365,7 +365,7 @@ std::basic_string<T> toHexString(std::basic_string_view<T> input)
+@@ -365,7 +365,7 @@ std::basic_string<T> toHexString(std::ba
      std::basic_string<T> output;
  
      for (T const ch: input)
@@ -1496,9 +1696,10 @@ diff --git a/src/crispy/utils.h b/src/crispy/utils.h
  }
  
  template <typename... Ts>
-diff --git a/src/crispy/utils_test.cpp b/src/crispy/utils_test.cpp
---- a/src/crispy/utils_test.cpp
-+++ b/src/crispy/utils_test.cpp
+Index: deepin-contour/src/crispy/utils_test.cpp
+===================================================================
+--- deepin-contour.orig/src/crispy/utils_test.cpp
++++ deepin-contour/src/crispy/utils_test.cpp
 @@ -120,7 +120,7 @@ TEST_CASE("fromHexString")
  
  struct variable_collector
@@ -1508,9 +1709,10 @@ diff --git a/src/crispy/utils_test.cpp b/src/crispy/utils_test.cpp
  };
  
  TEST_CASE("replaceVariables")
-diff --git a/src/text_shaper/font.cpp b/src/text_shaper/font.cpp
---- a/src/text_shaper/font.cpp
-+++ b/src/text_shaper/font.cpp
+Index: deepin-contour/src/text_shaper/font.cpp
+===================================================================
+--- deepin-contour.orig/src/text_shaper/font.cpp
++++ deepin-contour/src/text_shaper/font.cpp
 @@ -1,7 +1,7 @@
  // SPDX-License-Identifier: Apache-2.0
  #include <text_shaper/font.h>
@@ -1520,7 +1722,7 @@ diff --git a/src/text_shaper/font.cpp b/src/text_shaper/font.cpp
  
  using std::string;
  using std::string_view;
-@@ -13,10 +13,10 @@ string font_description::toPattern() const
+@@ -13,10 +13,10 @@ string font_description::toPattern() con
  {
      string m;
      if (weight != font_weight::normal)
@@ -1534,9 +1736,10 @@ diff --git a/src/text_shaper/font.cpp b/src/text_shaper/font.cpp
  }
  
  font_description font_description::parse(string_view pattern)
-diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
---- a/src/text_shaper/font.h
-+++ b/src/text_shaper/font.h
+Index: deepin-contour/src/text_shaper/font.h
+===================================================================
+--- deepin-contour.orig/src/text_shaper/font.h
++++ deepin-contour/src/text_shaper/font.h
 @@ -17,7 +17,7 @@
  #endif
  
@@ -1566,7 +1769,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
  {
      auto format(text::font_weight value, auto& ctx) const
      {
-@@ -369,12 +369,12 @@ struct std::formatter<text::font_weight>: formatter<string_view>
+@@ -369,12 +369,12 @@ struct std::formatter<text::font_weight>
              case text::font_weight::black: name = "Black"; break;
              case text::font_weight::extra_black: name = "ExtraBlack"; break;
          }
@@ -1581,7 +1784,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
  {
      auto format(text::font_slant value, auto& ctx) const
      {
-@@ -385,12 +385,12 @@ struct std::formatter<text::font_slant>: formatter<string_view>
+@@ -385,12 +385,12 @@ struct std::formatter<text::font_slant>:
              case text::font_slant::italic: name = "Italic"; break;
              case text::font_slant::oblique: name = "Oblique"; break;
          }
@@ -1596,7 +1799,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
  {
      auto format(text::font_spacing value, auto& ctx) const
      {
-@@ -400,17 +400,17 @@ struct std::formatter<text::font_spacing>: formatter<string_view>
+@@ -400,17 +400,17 @@ struct std::formatter<text::font_spacing
              case text::font_spacing::proportional: name = "Proportional"; break;
              case text::font_spacing::mono: name = "Monospace"; break;
          }
@@ -1618,7 +1821,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
                          desc.familyName,
                          desc.weight,
                          desc.slant,
-@@ -421,11 +421,11 @@ struct std::formatter<text::font_description>: std::formatter<std::string>
+@@ -421,11 +421,11 @@ struct std::formatter<text::font_descrip
  };
  
  template <>
@@ -1632,7 +1835,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
                                                            metrics.lineHeight,
                                                            metrics.advance,
                                                            metrics.ascender,
-@@ -437,58 +437,58 @@ struct std::formatter<text::font_metrics>: std::formatter<std::string>
+@@ -437,58 +437,58 @@ struct std::formatter<text::font_metrics
  };
  
  template <>
@@ -1703,7 +1906,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
                                                            value.enabled ? '+' : '-',
                                                            value.name[0],
                                                            value.name[1],
-@@ -499,7 +499,7 @@ struct std::formatter<text::font_feature>: std::formatter<std::string>
+@@ -499,7 +499,7 @@ struct std::formatter<text::font_feature
  };
  
  template <>
@@ -1712,7 +1915,7 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
  {
      auto format(text::render_mode value, auto& ctx) const
      {
-@@ -512,7 +512,7 @@ struct std::formatter<text::render_mode>: std::formatter<std::string_view>
+@@ -512,7 +512,7 @@ struct std::formatter<text::render_mode>
              case text::render_mode::lcd: name = "LCD"; break;
              case text::render_mode::color: name = "Color"; break;
          }
@@ -1721,9 +1924,10 @@ diff --git a/src/text_shaper/font.h b/src/text_shaper/font.h
      }
  };
  // }}}
-diff --git a/src/text_shaper/font_locator.h b/src/text_shaper/font_locator.h
---- a/src/text_shaper/font_locator.h
-+++ b/src/text_shaper/font_locator.h
+Index: deepin-contour/src/text_shaper/font_locator.h
+===================================================================
+--- deepin-contour.orig/src/text_shaper/font_locator.h
++++ deepin-contour/src/text_shaper/font_locator.h
 @@ -6,7 +6,7 @@
  #include <gsl/span>
  #include <gsl/span_ext>
@@ -1780,9 +1984,10 @@ diff --git a/src/text_shaper/font_locator.h b/src/text_shaper/font_locator.h
 +        return fmt::formatter<std::string>::format(text, ctx);
      }
  };
-diff --git a/src/text_shaper/fontconfig_locator.cpp b/src/text_shaper/fontconfig_locator.cpp
---- a/src/text_shaper/fontconfig_locator.cpp
-+++ b/src/text_shaper/fontconfig_locator.cpp
+Index: deepin-contour/src/text_shaper/fontconfig_locator.cpp
+===================================================================
+--- deepin-contour.orig/src/text_shaper/fontconfig_locator.cpp
++++ deepin-contour/src/text_shaper/fontconfig_locator.cpp
 @@ -36,7 +36,7 @@ namespace
              case FC_DUAL: return "dual";
              case FC_MONO: return "mono";
@@ -1792,7 +1997,7 @@ diff --git a/src/text_shaper/fontconfig_locator.cpp b/src/text_shaper/fontconfig
          }
      }
  
-@@ -259,8 +259,8 @@ font_source_list fontconfig_locator::locate(font_description const& description)
+@@ -259,8 +259,8 @@ font_source_list fontconfig_locator::loc
          locatorLog()("Font {} (ttc index {}, weight {}, slant {}, spacing {}) in chain: {}",
                       output.size(),
                       ttcIndex,
@@ -1803,9 +2008,10 @@ diff --git a/src/text_shaper/fontconfig_locator.cpp b/src/text_shaper/fontconfig
                       spacing,
                       (char const*) file);
      };
-diff --git a/src/text_shaper/open_shaper.cpp b/src/text_shaper/open_shaper.cpp
---- a/src/text_shaper/open_shaper.cpp
-+++ b/src/text_shaper/open_shaper.cpp
+Index: deepin-contour/src/text_shaper/open_shaper.cpp
+===================================================================
+--- deepin-contour.orig/src/text_shaper/open_shaper.cpp
++++ deepin-contour/src/text_shaper/open_shaper.cpp
 @@ -92,7 +92,7 @@ struct hash<FontInfo>
      {
          auto fnv = crispy::fnv<char>();
@@ -1815,9 +2021,10 @@ diff --git a/src/text_shaper/open_shaper.cpp b/src/text_shaper/open_shaper.cpp
      }
  };
  } // namespace std
-diff --git a/src/text_shaper/shaper.h b/src/text_shaper/shaper.h
---- a/src/text_shaper/shaper.h
-+++ b/src/text_shaper/shaper.h
+Index: deepin-contour/src/text_shaper/shaper.h
+===================================================================
+--- deepin-contour.orig/src/text_shaper/shaper.h
++++ deepin-contour/src/text_shaper/shaper.h
 @@ -16,7 +16,7 @@
  #include <gsl/span_ext>
  
@@ -1836,7 +2043,7 @@ diff --git a/src/text_shaper/shaper.h b/src/text_shaper/shaper.h
  {
      auto format(text::bitmap_format value, auto& ctx) const
      {
-@@ -167,16 +167,16 @@ struct std::formatter<text::bitmap_format>: std::formatter<std::string_view>
+@@ -167,16 +167,16 @@ struct std::formatter<text::bitmap_forma
              case text::bitmap_format::rgb: name = "rgb"; break;
              case text::bitmap_format::rgba: name = "rgba"; break;
          }
@@ -1856,7 +2063,7 @@ diff --git a/src/text_shaper/shaper.h b/src/text_shaper/shaper.h
                                                            gpos.glyph.index.value,
                                                            gpos.offset.x,
                                                            gpos.offset.y,
-@@ -187,11 +187,11 @@ struct std::formatter<text::glyph_position>: std::formatter<std::string>
+@@ -187,11 +187,11 @@ struct std::formatter<text::glyph_positi
  };
  
  template <>
@@ -1870,9 +2077,10 @@ diff --git a/src/text_shaper/shaper.h b/src/text_shaper/shaper.h
                                                            glyph.index.value,
                                                            glyph.bitmapSize,
                                                            glyph.position,
-diff --git a/src/vtbackend/Capabilities.h b/src/vtbackend/Capabilities.h
---- a/src/vtbackend/Capabilities.h
-+++ b/src/vtbackend/Capabilities.h
+Index: deepin-contour/src/vtbackend/Capabilities.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Capabilities.h
++++ deepin-contour/src/vtbackend/Capabilities.h
 @@ -2,7 +2,7 @@
  #pragma once
  
@@ -1904,9 +2112,10 @@ diff --git a/src/vtbackend/Capabilities.h b/src/vtbackend/Capabilities.h
 +        return fmt::formatter<std::string>::format(value.hex(), ctx);
      }
  };
-diff --git a/src/vtbackend/Capabilities_test.cpp b/src/vtbackend/Capabilities_test.cpp
---- a/src/vtbackend/Capabilities_test.cpp
-+++ b/src/vtbackend/Capabilities_test.cpp
+Index: deepin-contour/src/vtbackend/Capabilities_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Capabilities_test.cpp
++++ deepin-contour/src/vtbackend/Capabilities_test.cpp
 @@ -5,7 +5,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -1916,9 +2125,10 @@ diff --git a/src/vtbackend/Capabilities_test.cpp b/src/vtbackend/Capabilities_te
  
  using namespace std::string_view_literals;
  using crispy::fromHexString;
-diff --git a/src/vtbackend/CellFlags.h b/src/vtbackend/CellFlags.h
---- a/src/vtbackend/CellFlags.h
-+++ b/src/vtbackend/CellFlags.h
+Index: deepin-contour/src/vtbackend/CellFlags.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/CellFlags.h
++++ deepin-contour/src/vtbackend/CellFlags.h
 @@ -4,7 +4,7 @@
  #include <crispy/flags.h>
  
@@ -1928,7 +2138,7 @@ diff --git a/src/vtbackend/CellFlags.h b/src/vtbackend/CellFlags.h
  
  namespace vtbackend
  {
-@@ -39,7 +39,7 @@ using CellFlags = crispy::flags<CellFlag>;
+@@ -39,7 +39,7 @@ using CellFlags = crispy::flags<CellFlag
  
  // {{{
  template <>
@@ -1937,7 +2147,7 @@ diff --git a/src/vtbackend/CellFlags.h b/src/vtbackend/CellFlags.h
  {
      auto format(const vtbackend::CellFlag value, auto& ctx) const
      {
-@@ -70,7 +70,7 @@ struct std::formatter<vtbackend::CellFlag>: std::formatter<std::string_view>
+@@ -70,7 +70,7 @@ struct std::formatter<vtbackend::CellFla
          }
          // clang-format on
  
@@ -1946,9 +2156,10 @@ diff --git a/src/vtbackend/CellFlags.h b/src/vtbackend/CellFlags.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/Color.cpp b/src/vtbackend/Color.cpp
---- a/src/vtbackend/Color.cpp
-+++ b/src/vtbackend/Color.cpp
+Index: deepin-contour/src/vtbackend/Color.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Color.cpp
++++ deepin-contour/src/vtbackend/Color.cpp
 @@ -14,7 +14,7 @@ string to_string(Color color)
      using Type = ColorType;
      switch (color.type())
@@ -1985,7 +2196,7 @@ diff --git a/src/vtbackend/Color.cpp b/src/vtbackend/Color.cpp
  }
  
  RGBColor::RGBColor(std::string const& hexCode): RGBColor()
-@@ -121,12 +121,12 @@ RGBAColor& RGBAColor::operator=(string const& hexCode)
+@@ -121,12 +121,12 @@ RGBAColor& RGBAColor::operator=(string c
  
  string to_string(RGBColor c)
  {
@@ -2000,9 +2211,10 @@ diff --git a/src/vtbackend/Color.cpp b/src/vtbackend/Color.cpp
  }
  
  optional<RGBColor> parseColor(string_view const& value)
-diff --git a/src/vtbackend/Color.h b/src/vtbackend/Color.h
---- a/src/vtbackend/Color.h
-+++ b/src/vtbackend/Color.h
+Index: deepin-contour/src/vtbackend/Color.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Color.h
++++ deepin-contour/src/vtbackend/Color.h
 @@ -6,7 +6,7 @@
  #include <algorithm>
  #include <cmath>
@@ -2012,7 +2224,7 @@ diff --git a/src/vtbackend/Color.h b/src/vtbackend/Color.h
  #include <optional>
  #include <ostream>
  #include <string>
-@@ -400,52 +400,52 @@ std::optional<RGBColor> parseColor(std::string_view const& value);
+@@ -400,52 +400,52 @@ std::optional<RGBColor> parseColor(std::
  
  // {{{ fmtlib custom formatter
  template <>
@@ -2077,9 +2289,10 @@ diff --git a/src/vtbackend/Color.h b/src/vtbackend/Color.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/ColorPalette.h b/src/vtbackend/ColorPalette.h
---- a/src/vtbackend/ColorPalette.h
-+++ b/src/vtbackend/ColorPalette.h
+Index: deepin-contour/src/vtbackend/ColorPalette.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/ColorPalette.h
++++ deepin-contour/src/vtbackend/ColorPalette.h
 @@ -10,7 +10,7 @@
  #include <cassert>
  #include <cstdint>
@@ -2089,7 +2302,7 @@ diff --git a/src/vtbackend/ColorPalette.h b/src/vtbackend/ColorPalette.h
  #include <variant>
  
  namespace vtbackend
-@@ -152,7 +152,7 @@ RGBColor apply(ColorPalette const& colorPalette, Color color, ColorTarget target
+@@ -152,7 +152,7 @@ RGBColor apply(ColorPalette const& color
  
  // {{{ fmtlib custom formatter support
  template <>
@@ -2098,7 +2311,7 @@ diff --git a/src/vtbackend/ColorPalette.h b/src/vtbackend/ColorPalette.h
  {
      auto format(vtbackend::ColorPreference value, auto& ctx) const
      {
-@@ -162,12 +162,12 @@ struct std::formatter<vtbackend::ColorPreference>: std::formatter<std::string_vi
+@@ -162,12 +162,12 @@ struct std::formatter<vtbackend::ColorPr
              case vtbackend::ColorPreference::Dark: name = "Dark"; break;
              case vtbackend::ColorPreference::Light: name = "Light"; break;
          }
@@ -2113,7 +2326,7 @@ diff --git a/src/vtbackend/ColorPalette.h b/src/vtbackend/ColorPalette.h
  {
      auto format(vtbackend::ColorMode value, auto& ctx) const
      {
-@@ -178,12 +178,12 @@ struct std::formatter<vtbackend::ColorMode>: std::formatter<std::string_view>
+@@ -178,12 +178,12 @@ struct std::formatter<vtbackend::ColorMo
              case vtbackend::ColorMode::Dimmed: name = "Dimmed"; break;
              case vtbackend::ColorMode::Bright: name = "Bright"; break;
          }
@@ -2128,7 +2341,7 @@ diff --git a/src/vtbackend/ColorPalette.h b/src/vtbackend/ColorPalette.h
  {
      auto format(vtbackend::ColorTarget value, auto& ctx) const
      {
-@@ -193,7 +193,7 @@ struct std::formatter<vtbackend::ColorTarget>: std::formatter<std::string_view>
+@@ -193,7 +193,7 @@ struct std::formatter<vtbackend::ColorTa
              case vtbackend::ColorTarget::Foreground: name = "Foreground"; break;
              case vtbackend::ColorTarget::Background: name = "Background"; break;
          }
@@ -2137,9 +2350,10 @@ diff --git a/src/vtbackend/ColorPalette.h b/src/vtbackend/ColorPalette.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/Functions.cpp b/src/vtbackend/Functions.cpp
---- a/src/vtbackend/Functions.cpp
-+++ b/src/vtbackend/Functions.cpp
+Index: deepin-contour/src/vtbackend/Functions.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Functions.cpp
++++ deepin-contour/src/vtbackend/Functions.cpp
 @@ -10,7 +10,7 @@
  
  #include <algorithm>
@@ -2149,7 +2363,7 @@ diff --git a/src/vtbackend/Functions.cpp b/src/vtbackend/Functions.cpp
  #include <numeric>
  #include <sstream>
  #include <string>
-@@ -40,7 +40,7 @@ Function const* select(FunctionSelector const& selector,
+@@ -40,7 +40,7 @@ Function const* select(FunctionSelector
          auto const i = (a + b) / 2;
          auto const& fui = availableDefinitions[i];
          auto const rel = compare(selector, fui);
@@ -2158,9 +2372,10 @@ diff --git a/src/vtbackend/Functions.cpp b/src/vtbackend/Functions.cpp
          // ? '>' : '=', I);
          if (rel > 0)
              a = i + 1;
-diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
---- a/src/vtbackend/Functions.h
-+++ b/src/vtbackend/Functions.h
+Index: deepin-contour/src/vtbackend/Functions.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Functions.h
++++ deepin-contour/src/vtbackend/Functions.h
 @@ -11,7 +11,7 @@
  #include <gsl/span>
  
@@ -2188,7 +2403,7 @@ diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
  {
      auto format(const vtbackend::FunctionCategory value, auto& ctx) const
      {
-@@ -955,12 +955,12 @@ struct std::formatter<vtbackend::FunctionCategory>: std::formatter<std::string_v
+@@ -955,12 +955,12 @@ struct std::formatter<vtbackend::Functio
                  break;
                  ;
          }
@@ -2203,7 +2418,7 @@ diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
  {
      auto format(const vtbackend::Function f, auto& ctx) const
      {
-@@ -968,35 +968,35 @@ struct std::formatter<vtbackend::Function>: std::formatter<std::string>
+@@ -968,35 +968,35 @@ struct std::formatter<vtbackend::Functio
          switch (f.category)
          {
              case vtbackend::FunctionCategory::C0:
@@ -2245,7 +2460,7 @@ diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
                                          f.category,
                                          f.leader ? f.leader : ' ',
                                          f.minimumParameters,
-@@ -1005,12 +1005,12 @@ struct std::formatter<vtbackend::Function>: std::formatter<std::string>
+@@ -1005,12 +1005,12 @@ struct std::formatter<vtbackend::Functio
                                          f.finalSymbol);
                  break;
          }
@@ -2260,7 +2475,7 @@ diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
  {
      auto format(const vtbackend::FunctionSelector f, auto& ctx) const
      {
-@@ -1019,10 +1019,10 @@ struct std::formatter<vtbackend::FunctionSelector>: std::formatter<std::string>
+@@ -1019,10 +1019,10 @@ struct std::formatter<vtbackend::Functio
          switch (f.category)
          {
              case vtbackend::FunctionCategory::OSC:
@@ -2273,7 +2488,7 @@ diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
                                      f.category,
                                      f.leader ? f.leader : ' ',
                                      f.argc,
-@@ -1031,7 +1031,7 @@ struct std::formatter<vtbackend::FunctionSelector>: std::formatter<std::string>
+@@ -1031,7 +1031,7 @@ struct std::formatter<vtbackend::Functio
                  break;
          }
          // clang-format on
@@ -2282,9 +2497,10 @@ diff --git a/src/vtbackend/Functions.h b/src/vtbackend/Functions.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/Functions_test.cpp b/src/vtbackend/Functions_test.cpp
---- a/src/vtbackend/Functions_test.cpp
-+++ b/src/vtbackend/Functions_test.cpp
+Index: deepin-contour/src/vtbackend/Functions_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Functions_test.cpp
++++ deepin-contour/src/vtbackend/Functions_test.cpp
 @@ -3,14 +3,14 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -2302,9 +2518,10 @@ diff --git a/src/vtbackend/Functions_test.cpp b/src/vtbackend/Functions_test.cpp
  }
  } // namespace vtbackend
  
-diff --git a/src/vtbackend/Grid.cpp b/src/vtbackend/Grid.cpp
---- a/src/vtbackend/Grid.cpp
-+++ b/src/vtbackend/Grid.cpp
+Index: deepin-contour/src/vtbackend/Grid.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Grid.cpp
++++ deepin-contour/src/vtbackend/Grid.cpp
 @@ -6,7 +6,7 @@
  #include <crispy/logstore.h>
  
@@ -2314,7 +2531,7 @@ diff --git a/src/vtbackend/Grid.cpp b/src/vtbackend/Grid.cpp
  #include <iostream>
  
  using std::max;
-@@ -758,13 +758,13 @@ CellLocation Grid<Cell>::resize(PageSize newSize, CellLocation currentCursorPos,
+@@ -758,13 +758,13 @@ CellLocation Grid<Cell>::resize(PageSize
              for (int i = -*historyLineCount(); i < *_pageSize.lines; ++i)
              {
                  auto& line = _lines[i];
@@ -2330,7 +2547,7 @@ diff --git a/src/vtbackend/Grid.cpp b/src/vtbackend/Grid.cpp
                      // line.toUtf8Trimmed()));
                      appendToLogicalLine(line.trim_blank_right());
                  }
-@@ -1008,7 +1008,7 @@ void Grid<Cell>::appendNewLines(LineCount count, GraphicsAttributes attr)
+@@ -1008,7 +1008,7 @@ void Grid<Cell>::appendNewLines(LineCoun
  template <CellConcept Cell>
  std::ostream& dumpGrid(std::ostream& os, Grid<Cell> const& grid)
  {
@@ -2339,7 +2556,7 @@ diff --git a/src/vtbackend/Grid.cpp b/src/vtbackend/Grid.cpp
          "main page lines: scrollback cur {} max {}, main page lines {}, used lines {}, zero index {}\n",
          grid.historyLineCount(),
          grid.maxHistoryLineCount(),
-@@ -1021,7 +1021,7 @@ std::ostream& dumpGrid(std::ostream& os, Grid<Cell> const& grid)
+@@ -1021,7 +1021,7 @@ std::ostream& dumpGrid(std::ostream& os,
      {
          vtbackend::Line<Cell> const& lineAttribs = grid.lineAt(LineOffset(lineOffset));
  
@@ -2348,9 +2565,10 @@ diff --git a/src/vtbackend/Grid.cpp b/src/vtbackend/Grid.cpp
                            lineOffset,
                            grid.lineText(LineOffset::cast_from(lineOffset)),
                            lineAttribs.flags());
-diff --git a/src/vtbackend/Grid.h b/src/vtbackend/Grid.h
---- a/src/vtbackend/Grid.h
-+++ b/src/vtbackend/Grid.h
+Index: deepin-contour/src/vtbackend/Grid.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Grid.h
++++ deepin-contour/src/vtbackend/Grid.h
 @@ -911,20 +911,20 @@ template <typename RendererT>
  
  // {{{ fmt formatter
@@ -2376,9 +2594,10 @@ diff --git a/src/vtbackend/Grid.h b/src/vtbackend/Grid.h
      }
  };
  
-diff --git a/src/vtbackend/Grid_test.cpp b/src/vtbackend/Grid_test.cpp
---- a/src/vtbackend/Grid_test.cpp
-+++ b/src/vtbackend/Grid_test.cpp
+Index: deepin-contour/src/vtbackend/Grid_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Grid_test.cpp
++++ deepin-contour/src/vtbackend/Grid_test.cpp
 @@ -7,7 +7,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -2397,7 +2616,7 @@ diff --git a/src/vtbackend/Grid_test.cpp b/src/vtbackend/Grid_test.cpp
                                grid.historyLineCount(),
                                grid.maxHistoryLineCount(),
                                grid.pageSize(),
-@@ -32,7 +32,7 @@ void logGridText(Grid<Cell> const& grid, string const& headline = "")
+@@ -32,7 +32,7 @@ void logGridText(Grid<Cell> const& grid,
      for (int line = -grid.historyLineCount().as<int>(); line < grid.pageSize().lines.as<int>(); ++line)
      {
          UNSCOPED_INFO(
@@ -2406,7 +2625,7 @@ diff --git a/src/vtbackend/Grid_test.cpp b/src/vtbackend/Grid_test.cpp
                          line,
                          grid.lineText(LineOffset::cast_from(line - grid.historyLineCount().as<int>())),
                          grid.lineAt(LineOffset::cast_from(line)).flags()));
-@@ -41,13 +41,13 @@ void logGridText(Grid<Cell> const& grid, string const& headline = "")
+@@ -41,13 +41,13 @@ void logGridText(Grid<Cell> const& grid,
  
  [[maybe_unused]] void logGridTextAlways(Grid<Cell> const& grid, string const& headline = "")
  {
@@ -2440,7 +2659,7 @@ diff --git a/src/vtbackend/Grid_test.cpp b/src/vtbackend/Grid_test.cpp
                              grid.pageSize().columns,
                              grid.pageSize().lines,
                              grid.maxHistoryLineCount()));
-@@ -533,7 +533,7 @@ TEST_CASE("resize_reflow_shrink", "[grid]")
+@@ -533,7 +533,7 @@ TEST_CASE("resize_reflow_shrink", "[grid
      CHECK(grid.lineText(LineOffset(0)) == "abcd");
      CHECK(grid.lineText(LineOffset(1)) == "e   ");
  
@@ -2449,7 +2668,7 @@ diff --git a/src/vtbackend/Grid_test.cpp b/src/vtbackend/Grid_test.cpp
      auto ll = grid.logicalLines();
      auto li = ll.begin();
      auto le = ll.end();
-@@ -544,7 +544,7 @@ TEST_CASE("resize_reflow_shrink", "[grid]")
+@@ -544,7 +544,7 @@ TEST_CASE("resize_reflow_shrink", "[grid
      CHECK(li == le);
  
      // 3x2
@@ -2458,10 +2677,11 @@ diff --git a/src/vtbackend/Grid_test.cpp b/src/vtbackend/Grid_test.cpp
      (void) grid.resize(
          PageSize { LineCount(2), ColumnCount(3) }, CellLocation { .line = {}, .column = {} }, false);
      logGridText(grid, "after resize 3x2");
-diff --git a/src/vtbackend/Image.cpp b/src/vtbackend/Image.cpp
---- a/src/vtbackend/Image.cpp
-+++ b/src/vtbackend/Image.cpp
-@@ -65,7 +65,7 @@ Image::Data RasterizedImage::fragment(CellLocation pos) const
+Index: deepin-contour/src/vtbackend/Image.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Image.cpp
++++ deepin-contour/src/vtbackend/Image.cpp
+@@ -65,7 +65,7 @@ Image::Data RasterizedImage::fragment(Ce
          min(unbox<int>(_image->height()) - unbox(pixelOffset.line), unbox<int>(_cellSize.height));
  
      // auto const availableSize = Size{availableWidth, availableHeight};
@@ -2470,7 +2690,7 @@ diff --git a/src/vtbackend/Image.cpp b/src/vtbackend/Image.cpp
      //     "RasterizedImage.fragment({}): pixelOffset={}, cellSize={}/{}\n",
      //     pos,
      //     pixelOffset,
-@@ -76,7 +76,7 @@ Image::Data RasterizedImage::fragment(CellLocation pos) const
+@@ -76,7 +76,7 @@ Image::Data RasterizedImage::fragment(Ce
      // auto const fitsWidth = pixelOffset.column + _cellSize.width < _image.get().width();
      // auto const fitsHeight = pixelOffset.line + _cellSize.height < _image.get().height();
      // if (!fitsWidth || !fitsHeight)
@@ -2488,9 +2708,10 @@ diff --git a/src/vtbackend/Image.cpp b/src/vtbackend/Image.cpp
      _imageNameToImageCache.inspect(os);
  }
  
-diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
---- a/src/vtbackend/Image.h
-+++ b/src/vtbackend/Image.h
+Index: deepin-contour/src/vtbackend/Image.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Image.h
++++ deepin-contour/src/vtbackend/Image.h
 @@ -8,7 +8,7 @@
  #include <crispy/StrongLRUCache.h>
  
@@ -2509,7 +2730,7 @@ diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
  {
      auto format(vtbackend::ImageFormat value, auto& ctx) const
      {
-@@ -269,24 +269,24 @@ struct std::formatter<vtbackend::ImageFormat>: formatter<std::string_view>
+@@ -269,24 +269,24 @@ struct std::formatter<vtbackend::ImageFo
              case vtbackend::ImageFormat::RGB: name = "RGB"; break;
              case vtbackend::ImageFormat::RGBA: name = "RGBA"; break;
          }
@@ -2539,7 +2760,7 @@ diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
  {
      auto format(std::shared_ptr<vtbackend::Image const> const& image, auto& ctx) const
      {
-@@ -296,18 +296,18 @@ struct std::formatter<std::shared_ptr<vtbackend::Image const>>: std::formatter<s
+@@ -296,18 +296,18 @@ struct std::formatter<std::shared_ptr<vt
          else
          {
              vtbackend::Image const& imageRef = *image;
@@ -2561,7 +2782,7 @@ diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
  {
      auto format(vtbackend::ImageResize value, auto& ctx) const
      {
-@@ -319,12 +319,12 @@ struct std::formatter<vtbackend::ImageResize>: formatter<std::string_view>
+@@ -319,12 +319,12 @@ struct std::formatter<vtbackend::ImageRe
              case vtbackend::ImageResize::ResizeToFill: name = "ResizeToFill"; break;
              case vtbackend::ImageResize::StretchToFill: name = "StretchToFill"; break;
          }
@@ -2576,7 +2797,7 @@ diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
  {
      auto format(vtbackend::ImageAlignment value, auto& ctx) const
      {
-@@ -341,16 +341,16 @@ struct std::formatter<vtbackend::ImageAlignment>: formatter<std::string_view>
+@@ -341,16 +341,16 @@ struct std::formatter<vtbackend::ImageAl
              case vtbackend::ImageAlignment::BottomCenter: name = "BottomCenter"; break;
              case vtbackend::ImageAlignment::BottomEnd: name = "BottomEnd"; break;
          }
@@ -2596,7 +2817,7 @@ diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
                                                            image.weak_from_this().use_count(),
                                                            image.cellSpan(),
                                                            image.resizePolicy(),
-@@ -361,12 +361,12 @@ struct std::formatter<vtbackend::RasterizedImage>: formatter<std::string>
+@@ -361,12 +361,12 @@ struct std::formatter<vtbackend::Rasteri
  };
  
  template <>
@@ -2612,9 +2833,10 @@ diff --git a/src/vtbackend/Image.h b/src/vtbackend/Image.h
                          fragment.offset().line.value,
                          fragment.offset().column.value,
                          fragment.rasterizedImage().imagePointer()->id().value),
-diff --git a/src/vtbackend/InputBinding.h b/src/vtbackend/InputBinding.h
---- a/src/vtbackend/InputBinding.h
-+++ b/src/vtbackend/InputBinding.h
+Index: deepin-contour/src/vtbackend/InputBinding.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/InputBinding.h
++++ deepin-contour/src/vtbackend/InputBinding.h
 @@ -4,7 +4,7 @@
  #include <vtbackend/InputGenerator.h>
  #include <vtbackend/MatchModes.h>
@@ -2624,7 +2846,7 @@ diff --git a/src/vtbackend/InputBinding.h b/src/vtbackend/InputBinding.h
  
  namespace vtbackend
  {
-@@ -58,7 +58,7 @@ bool operator<(InputBinding<I, O> const& a, InputBinding<I, O> const& b) noexcep
+@@ -58,11 +58,11 @@ bool operator<(InputBinding<I, O> const&
  } // namespace vtbackend
  
  template <typename I, typename O>
@@ -2633,9 +2855,15 @@ diff --git a/src/vtbackend/InputBinding.h b/src/vtbackend/InputBinding.h
  {
      auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return ctx.begin(); }
      auto format(vtbackend::InputBinding<I, O> const& binding, auto& ctx) const
-diff --git a/src/vtbackend/InputGenerator.cpp b/src/vtbackend/InputGenerator.cpp
---- a/src/vtbackend/InputGenerator.cpp
-+++ b/src/vtbackend/InputGenerator.cpp
+     {
+-        return std::format_to(ctx.out(), "{} {} {}", binding.modes, binding.modifiers, binding.input);
++        return fmt::format_to(ctx.out(), "{} {} {}", binding.modes, binding.modifiers, binding.input);
+     }
+ };
+Index: deepin-contour/src/vtbackend/InputGenerator.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/InputGenerator.cpp
++++ deepin-contour/src/vtbackend/InputGenerator.cpp
 @@ -9,7 +9,7 @@
  #include <libunicode/convert.h>
  
@@ -2666,7 +2894,7 @@ diff --git a/src/vtbackend/InputGenerator.cpp b/src/vtbackend/InputGenerator.cpp
  }
  
  // {{{ StandardKeyboardInputGenerator
-@@ -279,7 +279,7 @@ std::string ExtendedKeyboardInputGenerator::encodeModifiers(Modifiers modifiers,
+@@ -279,7 +279,7 @@ std::string ExtendedKeyboardInputGenerat
                                                              KeyboardEventType eventType) const
  {
      if (enabled(KeyboardEventFlag::ReportEventTypes))
@@ -2675,7 +2903,7 @@ diff --git a/src/vtbackend/InputGenerator.cpp b/src/vtbackend/InputGenerator.cpp
  
      if (modifiers.value() != 0)
          return std::to_string(1 + modifiers.value());
-@@ -293,7 +293,7 @@ std::string ExtendedKeyboardInputGenerator::encodeCharacter(char32_t ch,
+@@ -293,7 +293,7 @@ std::string ExtendedKeyboardInputGenerat
  {
      // The codepoint is always the lower-case form
      // TODO: use libunicode for down-shifting
@@ -2684,7 +2912,7 @@ diff --git a/src/vtbackend/InputGenerator.cpp b/src/vtbackend/InputGenerator.cpp
  
      auto result = std::move(unshiftedKey);
  
-@@ -496,9 +496,9 @@ bool ExtendedKeyboardInputGenerator::generateKey(Key key, Modifiers modifiers, K
+@@ -496,9 +496,9 @@ bool ExtendedKeyboardInputGenerator::gen
  
      auto const [code, function] = mapKey(key);
      auto const encodedModifiers = encodeModifiers(modifiers, eventType);
@@ -2696,7 +2924,7 @@ diff --git a/src/vtbackend/InputGenerator.cpp b/src/vtbackend/InputGenerator.cpp
      controlSequence += function;
      append(controlSequence);
  
-@@ -719,7 +719,7 @@ bool InputGenerator::generateMouse(MouseEventType eventType,
+@@ -719,7 +719,7 @@ bool InputGenerator::generateMouse(Mouse
      if (!_mouseProtocol.has_value())
          return false;
  
@@ -2705,9 +2933,10 @@ diff --git a/src/vtbackend/InputGenerator.cpp b/src/vtbackend/InputGenerator.cpp
      //                          _mouseTransport, *_mouseProtocol,
      //                          button, modifier, pos, eventType);
  
-diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
---- a/src/vtbackend/InputGenerator.h
-+++ b/src/vtbackend/InputGenerator.h
+Index: deepin-contour/src/vtbackend/InputGenerator.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/InputGenerator.h
++++ deepin-contour/src/vtbackend/InputGenerator.h
 @@ -9,7 +9,7 @@
  
  #include <libunicode/convert.h>
@@ -2717,7 +2946,16 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  #include <optional>
  #include <set>
  #include <string>
-@@ -557,7 +557,7 @@ inline std::string to_string(InputGenerator::MouseEventType value)
+@@ -293,7 +293,7 @@ class StandardKeyboardInputGenerator: pu
+     template <typename... Args>
+     void append(std::string_view const& text, Args... args)
+     {
+-        append(std::vformat(text, std::make_format_args(args...)));
++        append(fmt::vformat(text, fmt::make_format_args(args...)));
+     }
+ 
+     KeyMode _cursorKeysMode = KeyMode::Normal;
+@@ -557,7 +557,7 @@ inline std::string to_string(InputGenera
  // {{{ fmtlib custom formatter support
  
  template <>
@@ -2726,7 +2964,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::KeyboardEventType value, auto& ctx) const
      {
-@@ -568,12 +568,12 @@ struct std::formatter<vtbackend::KeyboardEventType>: formatter<std::string_view>
+@@ -568,12 +568,12 @@ struct std::formatter<vtbackend::Keyboar
              case vtbackend::KeyboardEventType::Repeat: name = "Repeat"; break;
              case vtbackend::KeyboardEventType::Release: name = "Release"; break;
          }
@@ -2741,7 +2979,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::KeyboardEventFlag value, auto& ctx) const
      {
-@@ -589,12 +589,12 @@ struct std::formatter<vtbackend::KeyboardEventFlag>: formatter<std::string_view>
+@@ -589,12 +589,12 @@ struct std::formatter<vtbackend::Keyboar
              case vtbackend::KeyboardEventFlag::ReportAssociatedText: name = "ReportAssociatedText"; break;
                  // clang-format on
          }
@@ -2756,7 +2994,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::MouseProtocol value, auto& ctx) const
      {
-@@ -607,12 +607,12 @@ struct std::formatter<vtbackend::MouseProtocol>: formatter<std::string_view>
+@@ -607,12 +607,12 @@ struct std::formatter<vtbackend::MousePr
              case vtbackend::MouseProtocol::NormalTracking: name = "NormalTracking"; break;
              case vtbackend::MouseProtocol::AnyEventTracking: name = "AnyEventTracking"; break;
          }
@@ -2771,7 +3009,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::Modifier value, auto& ctx) const
      {
-@@ -629,12 +629,12 @@ struct std::formatter<vtbackend::Modifier>: formatter<std::string_view>
+@@ -629,12 +629,12 @@ struct std::formatter<vtbackend::Modifie
              case vtbackend::Modifier::CapsLock: name = "CapsLock"; break;
              case vtbackend::Modifier::NumLock: name = "NumLock"; break;
          }
@@ -2786,7 +3024,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::InputGenerator::MouseWheelMode value, auto& ctx) const
      {
-@@ -649,12 +649,12 @@ struct std::formatter<vtbackend::InputGenerator::MouseWheelMode>: formatter<std:
+@@ -649,12 +649,12 @@ struct std::formatter<vtbackend::InputGe
                  name = "ApplicationCursorKeys";
                  break;
          }
@@ -2801,7 +3039,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::KeyMode value, auto& ctx) const
      {
-@@ -664,12 +664,12 @@ struct std::formatter<vtbackend::KeyMode>: public formatter<std::string_view>
+@@ -664,12 +664,12 @@ struct std::formatter<vtbackend::KeyMode
              case vtbackend::KeyMode::Normal: name = "Normal"; break;
              case vtbackend::KeyMode::Application: name = "Application"; break;
          }
@@ -2816,7 +3054,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::MouseButton value, auto& ctx) const
      {
-@@ -685,12 +685,12 @@ struct std::formatter<vtbackend::MouseButton>: formatter<std::string_view>
+@@ -685,12 +685,12 @@ struct std::formatter<vtbackend::MouseBu
              case vtbackend::MouseButton::WheelLeft: name = "WheelLeft"; break;
              case vtbackend::MouseButton::WheelRight: name = "WheelRight"; break;
          }
@@ -2831,7 +3069,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::MouseTransport value, auto& ctx) const
      {
-@@ -703,12 +703,12 @@ struct std::formatter<vtbackend::MouseTransport>: formatter<std::string_view>
+@@ -703,12 +703,12 @@ struct std::formatter<vtbackend::MouseTr
              case vtbackend::MouseTransport::URXVT: name = "URXVT"; break;
              case vtbackend::MouseTransport::SGRPixels: name = "SGR-Pixels"; break;
          }
@@ -2846,7 +3084,7 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
  {
      auto format(vtbackend::Key value, auto& ctx) const
      {
-@@ -811,7 +811,7 @@ struct std::formatter<vtbackend::Key>: formatter<std::string_view>
+@@ -811,7 +811,7 @@ struct std::formatter<vtbackend::Key>: f
              case vtbackend::Key::Numpad_8: name = "Numpad_8"; break;
              case vtbackend::Key::Numpad_9: name = "Numpad_9"; break;
          }
@@ -2855,10 +3093,11 @@ diff --git a/src/vtbackend/InputGenerator.h b/src/vtbackend/InputGenerator.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/InputGenerator_test.cpp b/src/vtbackend/InputGenerator_test.cpp
---- a/src/vtbackend/InputGenerator_test.cpp
-+++ b/src/vtbackend/InputGenerator_test.cpp
-@@ -173,7 +173,7 @@ TEST_CASE("InputGenerator.Modifier+ArrowKeys", "[terminal,input]")
+Index: deepin-contour/src/vtbackend/InputGenerator_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/InputGenerator_test.cpp
++++ deepin-contour/src/vtbackend/InputGenerator_test.cpp
+@@ -173,7 +173,7 @@ TEST_CASE("InputGenerator.Modifier+Arrow
      {
          auto input = InputGenerator {};
          input.generate(mapping.key, mapping.modifiers, KeyboardEventType::Press);
@@ -2867,7 +3106,7 @@ diff --git a/src/vtbackend/InputGenerator_test.cpp b/src/vtbackend/InputGenerato
          REQUIRE(escape(input.peek()) == escape(mapping.expected));
      }
  }
-@@ -182,7 +182,7 @@ TEST_CASE("InputGenerator.all(Ctrl + A..Z)", "[terminal,input]")
+@@ -182,7 +182,7 @@ TEST_CASE("InputGenerator.all(Ctrl + A..
  {
      for (char ch = 'A'; ch <= 'Z'; ++ch)
      {
@@ -2876,10 +3115,11 @@ diff --git a/src/vtbackend/InputGenerator_test.cpp b/src/vtbackend/InputGenerato
          auto input = InputGenerator {};
          input.generate(static_cast<char32_t>(ch), Modifier::Control, KeyboardEventType::Press);
          auto const c0 = string(1, static_cast<char>(ch - 'A' + 1));
-diff --git a/src/vtbackend/Line.cpp b/src/vtbackend/Line.cpp
---- a/src/vtbackend/Line.cpp
-+++ b/src/vtbackend/Line.cpp
-@@ -58,7 +58,7 @@ typename Line<Cell>::InflatedBuffer Line<Cell>::reflow(ColumnCount newColumnCoun
+Index: deepin-contour/src/vtbackend/Line.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Line.cpp
++++ deepin-contour/src/vtbackend/Line.cpp
+@@ -58,7 +58,7 @@ typename Line<Cell>::InflatedBuffer Line
  #if 0
                  if (removedColumns.size() > 0 && std::ranges::any_of(removedColumns, [](Cell const& x) {
                          if (!x.empty())
@@ -2888,10 +3128,11 @@ diff --git a/src/vtbackend/Line.cpp b/src/vtbackend/Line.cpp
                          return !x.empty();
                      }))
                      printf("Wrapping around\n");
-diff --git a/src/vtbackend/Line.h b/src/vtbackend/Line.h
---- a/src/vtbackend/Line.h
-+++ b/src/vtbackend/Line.h
-@@ -464,7 +464,7 @@ inline typename Line<Cell>::InflatedBuffer const& Line<Cell>::inflatedBuffer() c
+Index: deepin-contour/src/vtbackend/Line.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Line.h
++++ deepin-contour/src/vtbackend/Line.h
+@@ -464,7 +464,7 @@ inline typename Line<Cell>::InflatedBuff
  } // namespace vtbackend
  
  template <>
@@ -2900,7 +3141,7 @@ diff --git a/src/vtbackend/Line.h b/src/vtbackend/Line.h
  {
      auto format(const vtbackend::LineFlags flags, auto& ctx) const
      {
-@@ -483,6 +483,6 @@ struct std::formatter<vtbackend::LineFlags>: formatter<std::string>
+@@ -483,6 +483,6 @@ struct std::formatter<vtbackend::LineFla
                  s += mapping.second;
              }
          }
@@ -2908,9 +3149,10 @@ diff --git a/src/vtbackend/Line.h b/src/vtbackend/Line.h
 +        return fmt::formatter<std::string>::format(s, ctx);
      }
  };
-diff --git a/src/vtbackend/Line_test.cpp b/src/vtbackend/Line_test.cpp
---- a/src/vtbackend/Line_test.cpp
-+++ b/src/vtbackend/Line_test.cpp
+Index: deepin-contour/src/vtbackend/Line_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Line_test.cpp
++++ deepin-contour/src/vtbackend/Line_test.cpp
 @@ -112,7 +112,7 @@ TEST_CASE("Line.inflate", "[Line]")
      for (size_t i = 0; i < inflated.size(); ++i)
      {
@@ -2920,7 +3162,7 @@ diff --git a/src/vtbackend/Line_test.cpp b/src/vtbackend/Line_test.cpp
          CHECK(cell.foregroundColor() == sgr.foregroundColor);
          CHECK(cell.backgroundColor() == sgr.backgroundColor);
          CHECK(cell.underlineColor() == sgr.underlineColor);
-@@ -152,7 +152,7 @@ TEST_CASE("Line.inflate.Unicode", "[Line]")
+@@ -152,7 +152,7 @@ TEST_CASE("Line.inflate.Unicode", "[Line
      for (size_t i = 0, k = 0; i < inflated.size();)
      {
          auto const& cell = inflated[i];
@@ -2929,7 +3171,7 @@ diff --git a/src/vtbackend/Line_test.cpp b/src/vtbackend/Line_test.cpp
          REQUIRE(cell.codepointCount() == 1);
          REQUIRE(cell.codepoint(0) == TestTextUtf32[k]);
          REQUIRE(cell.foregroundColor() == sgr.foregroundColor);
-@@ -160,7 +160,7 @@ TEST_CASE("Line.inflate.Unicode", "[Line]")
+@@ -160,7 +160,7 @@ TEST_CASE("Line.inflate.Unicode", "[Line
          REQUIRE(cell.underlineColor() == sgr.underlineColor);
          for (int n = 1; n < cell.width(); ++n)
          {
@@ -2938,9 +3180,10 @@ diff --git a/src/vtbackend/Line_test.cpp b/src/vtbackend/Line_test.cpp
              auto const& fillCell = inflated.at(i + static_cast<size_t>(n));
              REQUIRE(fillCell.codepointCount() == 0);
              REQUIRE(fillCell.foregroundColor() == sgr.foregroundColor);
-diff --git a/src/vtbackend/Logger.h b/src/vtbackend/Logger.h
---- a/src/vtbackend/Logger.h
-+++ b/src/vtbackend/Logger.h
+Index: deepin-contour/src/vtbackend/Logger.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Logger.h
++++ deepin-contour/src/vtbackend/Logger.h
 @@ -2,7 +2,7 @@
  
  #include <crispy/overloaded.h>
@@ -2950,7 +3193,7 @@ diff --git a/src/vtbackend/Logger.h b/src/vtbackend/Logger.h
  #include <functional>
  #include <string>
  #include <variant>
-@@ -59,7 +59,7 @@ using Logger = std::function<void(LogEvent)>;
+@@ -59,7 +59,7 @@ using Logger = std::function<void(LogEve
  } // namespace vtbackend
  
  template <>
@@ -2959,9 +3202,43 @@ diff --git a/src/vtbackend/Logger.h b/src/vtbackend/Logger.h
  {
      auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return ctx.begin(); }
      auto format(const vtbackend::LogEvent& ev, auto& ctx) const
-diff --git a/src/vtbackend/MatchModes.h b/src/vtbackend/MatchModes.h
---- a/src/vtbackend/MatchModes.h
-+++ b/src/vtbackend/MatchModes.h
+@@ -68,25 +68,25 @@ struct std::formatter<vtbackend::LogEven
+         return std::visit(
+             overloaded {
+                 [&](ParserErrorEvent const& v) {
+-                    return std::format_to(ctx.out(), "Parser Error. {}", v.reason);
++                    return fmt::format_to(ctx.out(), "Parser Error. {}", v.reason);
+                 },
+                 [&](TraceInputEvent const& v) {
+-                    return std::format_to(ctx.out(), "Trace Input: {}", v.message);
++                    return fmt::format_to(ctx.out(), "Trace Input: {}", v.message);
+                 },
+                 [&](RawInputEvent const& v) {
+-                    return std::format_to(ctx.out(), "Raw Input: \"{}\"", v.sequence);
++                    return fmt::format_to(ctx.out(), "Raw Input: \"{}\"", v.sequence);
+                 },
+                 [&](RawOutputEvent const& v) {
+-                    return std::format_to(ctx.out(), "Raw Output: \"{}\"", v.sequence);
++                    return fmt::format_to(ctx.out(), "Raw Output: \"{}\"", v.sequence);
+                 },
+                 [&](InvalidOutputEvent const& v) {
+-                    return std::format_to(ctx.out(), "Invalid output sequence: {}. {}", v.sequence, v.reason);
++                    return fmt::format_to(ctx.out(), "Invalid output sequence: {}. {}", v.sequence, v.reason);
+                 },
+                 [&](UnsupportedOutputEvent const& v) {
+-                    return std::format_to(ctx.out(), "Unsupported output sequence: {}.", v.sequence);
++                    return fmt::format_to(ctx.out(), "Unsupported output sequence: {}.", v.sequence);
+                 },
+                 [&](TraceOutputEvent const& v) {
+-                    return std::format_to(ctx.out(), "Trace output sequence: {}", v.sequence);
++                    return fmt::format_to(ctx.out(), "Trace output sequence: {}", v.sequence);
+                 },
+             },
+             ev);
+Index: deepin-contour/src/vtbackend/MatchModes.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/MatchModes.h
++++ deepin-contour/src/vtbackend/MatchModes.h
 @@ -2,7 +2,7 @@
  #pragma once
  
@@ -2971,7 +3248,7 @@ diff --git a/src/vtbackend/MatchModes.h b/src/vtbackend/MatchModes.h
  
  namespace vtbackend
  {
-@@ -107,7 +107,7 @@ constexpr bool operator!=(MatchModes a, MatchModes b) noexcept
+@@ -107,7 +107,7 @@ constexpr bool operator!=(MatchModes a,
  
  // {{{ fmtlib support
  template <>
@@ -2980,7 +3257,7 @@ diff --git a/src/vtbackend/MatchModes.h b/src/vtbackend/MatchModes.h
  {
      auto format(vtbackend::MatchModes m, auto& ctx) const
      {
-@@ -131,7 +131,7 @@ struct std::formatter<vtbackend::MatchModes>: formatter<std::string>
+@@ -131,7 +131,7 @@ struct std::formatter<vtbackend::MatchMo
          advance(vtbackend::MatchModes::Trace, "Trace");
          if (s.empty())
              s = "Any";
@@ -2989,9 +3266,10 @@ diff --git a/src/vtbackend/MatchModes.h b/src/vtbackend/MatchModes.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/RenderBuffer.cpp b/src/vtbackend/RenderBuffer.cpp
---- a/src/vtbackend/RenderBuffer.cpp
-+++ b/src/vtbackend/RenderBuffer.cpp
+Index: deepin-contour/src/vtbackend/RenderBuffer.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/RenderBuffer.cpp
++++ deepin-contour/src/vtbackend/RenderBuffer.cpp
 @@ -1,7 +1,7 @@
  // SPDX-License-Identifier: Apache-2.0
  #include <vtbackend/RenderBuffer.h>
@@ -3001,9 +3279,10 @@ diff --git a/src/vtbackend/RenderBuffer.cpp b/src/vtbackend/RenderBuffer.cpp
  #include <mutex>
  
  namespace vtbackend
-diff --git a/src/vtbackend/RenderBufferBuilder.cpp b/src/vtbackend/RenderBufferBuilder.cpp
---- a/src/vtbackend/RenderBufferBuilder.cpp
-+++ b/src/vtbackend/RenderBufferBuilder.cpp
+Index: deepin-contour/src/vtbackend/RenderBufferBuilder.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/RenderBufferBuilder.cpp
++++ deepin-contour/src/vtbackend/RenderBufferBuilder.cpp
 @@ -325,7 +325,7 @@ template <CellConcept Cell>
  void RenderBufferBuilder<Cell>::renderTrivialLine(TrivialLineBuffer const& lineBuffer, LineOffset lineOffset)
  {
@@ -3013,7 +3292,7 @@ diff --git a/src/vtbackend/RenderBufferBuilder.cpp b/src/vtbackend/RenderBufferB
      //                lineOffset.value,
      //                lineBuffer.usedColumns,
      //                lineBuffer.displayWidth,
-@@ -518,7 +518,7 @@ ColumnCount RenderBufferBuilder<Cell>::renderUtf8Text(CellLocation screenPositio
+@@ -518,7 +518,7 @@ ColumnCount RenderBufferBuilder<Cell>::r
                                                  textAttributes.foregroundColor,
                                                  textAttributes.backgroundColor);
          auto const width = graphemeClusterWidth(graphemeCluster);
@@ -3022,9 +3301,10 @@ diff --git a/src/vtbackend/RenderBufferBuilder.cpp b/src/vtbackend/RenderBufferB
          //            columnOffset,
          //            width,
          //            unicode::convert_to<char>(u32string_view(graphemeCluster)).size(),
-diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
---- a/src/vtbackend/Screen.cpp
-+++ b/src/vtbackend/Screen.cpp
+Index: deepin-contour/src/vtbackend/Screen.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Screen.cpp
++++ deepin-contour/src/vtbackend/Screen.cpp
 @@ -308,7 +308,7 @@ void Screen<Cell>::verifyState() const
      [[maybe_unused]] auto const clampedCursorPos = clampToScreen(_cursor.position);
      if (_cursor.position != clampedCursorPos)
@@ -3034,7 +3314,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
          // FIXME: the above triggers on tmux vertical screen split (cursor.column off-by-one)
      }
  
-@@ -2027,7 +2027,7 @@ void Screen<Cell>::requestStatusString(RequestStatusString value)
+@@ -2027,7 +2027,7 @@ void Screen<Cell>::requestStatusString(R
                  auto const c1TransmittionMode = ControlTransmissionMode::S7C1T;
                  auto const c1t = c1TransmittionMode == ControlTransmissionMode::S7C1T ? 1 : 0;
  
@@ -3043,7 +3323,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
              }
              case RequestStatusString::DECSCUSR: // Set cursor style (DECSCUSR), VT520
              {
-@@ -2042,28 +2042,28 @@ void Screen<Cell>::requestStatusString(RequestStatusString value)
+@@ -2042,28 +2042,28 @@ void Screen<Cell>::requestStatusString(R
                      }
                      return 1;
                  }();
@@ -3089,7 +3369,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
          return output;
      }
  } // namespace
-@@ -2132,7 +2132,7 @@ void Screen<Cell>::requestCapability(std::string_view name)
+@@ -2132,7 +2132,7 @@ void Screen<Cell>::requestCapability(std
          reply("\033P1+r{}\033\\", toHexString(name));
      else if (auto const value = numericCapability(name); value != Database::Npos)
      {
@@ -3098,7 +3378,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
          if (hexValue.size() % 2)
              hexValue.insert(hexValue.begin(), '0');
          reply("\033P1+r{}={}\033\\", toHexString(name), hexValue);
-@@ -2150,7 +2150,7 @@ void Screen<Cell>::requestCapability(capabilities::Code code)
+@@ -2150,7 +2150,7 @@ void Screen<Cell>::requestCapability(cap
          reply("\033P1+r{}\033\\", code.hex());
      else if (auto const value = numericCapability(code); value >= 0)
      {
@@ -3107,7 +3387,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
          if (hexValue.size() % 2)
              hexValue.insert(hexValue.begin(), '0');
          reply("\033P1+r{}={}\033\\", code.hex(), hexValue);
-@@ -2230,7 +2230,7 @@ void Screen<Cell>::inspect(std::string const& message, std::ostream& os) const
+@@ -2230,7 +2230,7 @@ void Screen<Cell>::inspect(std::string c
      };
  
      auto const gridInfoLine = [&](Grid<Cell> const& grid) {
@@ -3116,7 +3396,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
                             "{}, zero index {}\n",
                             grid.historyLineCount(),
                             grid.maxHistoryLineCount(),
-@@ -2246,20 +2246,20 @@ void Screen<Cell>::inspect(std::string const& message, std::ostream& os) const
+@@ -2246,20 +2246,20 @@ void Screen<Cell>::inspect(std::string c
          hline();
      }
  
@@ -3144,7 +3424,7 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
                             _grid.lineAt(lineNo).isTrivialBuffer() ? "|" : ":",
                             lineNo.value,
                             _grid.lineAt(lineNo).flags());
-@@ -3277,7 +3277,7 @@ void Screen<Cell>::processSequence(Sequence const& seq)
+@@ -3277,7 +3277,7 @@ void Screen<Cell>::processSequence(Seque
      }
  #endif
  
@@ -3153,9 +3433,10 @@ diff --git a/src/vtbackend/Screen.cpp b/src/vtbackend/Screen.cpp
      //         seq.functionDefinition() ? seq.functionDefinition()->comment : ""sv);
  
      _terminal->incrementInstructionCounter();
-diff --git a/src/vtbackend/Screen.h b/src/vtbackend/Screen.h
---- a/src/vtbackend/Screen.h
-+++ b/src/vtbackend/Screen.h
+Index: deepin-contour/src/vtbackend/Screen.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Screen.h
++++ deepin-contour/src/vtbackend/Screen.h
 @@ -26,7 +26,7 @@
  
  #include <algorithm>
@@ -3174,7 +3455,16 @@ diff --git a/src/vtbackend/Screen.h b/src/vtbackend/Screen.h
  }
  
  enum class ApplyResult : uint8_t
-@@ -682,7 +682,7 @@ inline bool Screen<Cell>::isContiguousToCurrentLine(std::string_view continuatio
+@@ -599,7 +599,7 @@ class Screen final: public ScreenBase, p
+     template <typename... Ts>
+     void reply(std::string_view message, Ts const&... args)
+     {
+-        reply(std::vformat(message, std::make_format_args(args...)));
++        reply(fmt::vformat(message, fmt::make_format_args(args...)));
+     }
+ 
+   private:
+@@ -682,7 +682,7 @@ inline bool Screen<Cell>::isContiguousTo
  
  // {{{ fmt formatter
  template <>
@@ -3183,7 +3473,7 @@ diff --git a/src/vtbackend/Screen.h b/src/vtbackend/Screen.h
  {
      auto format(vtbackend::RequestStatusString value, auto& ctx) const
      {
-@@ -701,12 +701,12 @@ struct std::formatter<vtbackend::RequestStatusString>: formatter<std::string_vie
+@@ -701,12 +701,12 @@ struct std::formatter<vtbackend::Request
              case vtbackend::RequestStatusString::DECSASD: name = "DECSASD"; break;
              case vtbackend::RequestStatusString::DECSSDT: name = "DECSSDT"; break;
          }
@@ -3198,9 +3488,19 @@ diff --git a/src/vtbackend/Screen.h b/src/vtbackend/Screen.h
  {
      template <typename ParseContext>
      constexpr auto parse(ParseContext& ctx)
-diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
---- a/src/vtbackend/Screen_test.cpp
-+++ b/src/vtbackend/Screen_test.cpp
+@@ -716,7 +716,7 @@ struct std::formatter<vtbackend::Sequenc
+     template <typename FormatContext>
+     auto format(vtbackend::Sequence const& seq, FormatContext& ctx) const
+     {
+-        return std::format_to(ctx.out(), "{}", seq.text());
++        return fmt::format_to(ctx.out(), "{}", seq.text());
+     }
+ };
+ // }}}
+Index: deepin-contour/src/vtbackend/Screen_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Screen_test.cpp
++++ deepin-contour/src/vtbackend/Screen_test.cpp
 @@ -718,14 +718,14 @@ TEST_CASE("Linefeed", "[screen]")
      SECTION("with scroll-up")
      {
@@ -3309,7 +3609,7 @@ diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
                                     "D{0}E{1}F\r\n"
                                     "{0}G{1}H{0}I{1}",
                                     "\033[1\"q",
-@@ -1267,7 +1267,7 @@ TEST_CASE("DECSERA-all-defaults", "[screen]")
+@@ -1267,7 +1267,7 @@ TEST_CASE("DECSERA-all-defaults", "[scre
      auto mock = MockTerm { PageSize { LineCount(3), ColumnCount(3) } };
      auto& screen = mock.terminal.primaryScreen();
  
@@ -3408,7 +3708,7 @@ diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
      // "\033P1+r8/8/8\033\\"
      // TODO: CHECK(...)
  }
-@@ -3496,7 +3496,7 @@ TEST_CASE("DECCRA.DownLeft.intersecting", "[screen]")
+@@ -3496,7 +3496,7 @@ TEST_CASE("DECCRA.DownLeft.intersecting"
      // copy up by one line (4 to 3), 2 lines
      // copy left by one column (3 to 2), 2 columns
  
@@ -3417,7 +3717,7 @@ diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
          "\033[{};{};{};{};{};{};{};{}$v", STop, SLeft, SBottom, SRightt, Page, TTop, TLeftt, Page);
      mock.writeToScreen(deccraSeq);
  
-@@ -3527,7 +3527,7 @@ TEST_CASE("DECCRA.Right.intersecting", "[screen]")
+@@ -3527,7 +3527,7 @@ TEST_CASE("DECCRA.Right.intersecting", "
      auto constexpr SBottomRight = CellLocation { .line = LineOffset(3), .column = ColumnOffset(3) };
      auto constexpr TTopLeft = CellLocation { .line = LineOffset(1), .column = ColumnOffset(2) };
  
@@ -3426,7 +3726,7 @@ diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
                                         STopLeft.line + 1,
                                         STopLeft.column + 1,
                                         SBottomRight.line + 1,
-@@ -3565,7 +3565,7 @@ TEST_CASE("DECCRA.Left.intersecting", "[screen]")
+@@ -3565,7 +3565,7 @@ TEST_CASE("DECCRA.Left.intersecting", "[
      auto constexpr SBottomRight = CellLocation { .line = LineOffset(2), .column = ColumnOffset(5) };
      auto constexpr TTopLeft = CellLocation { .line = LineOffset(1), .column = ColumnOffset(2) };
  
@@ -3435,7 +3735,7 @@ diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
                                         STopLeft.line + 1,
                                         STopLeft.column + 1,
                                         SBottomRight.line + 1,
-@@ -3641,10 +3641,10 @@ TEST_CASE("Sixel.AutoScroll-1", "[screen]")
+@@ -3641,10 +3641,10 @@ TEST_CASE("Sixel.AutoScroll-1", "[screen
  
      for (auto line = LineOffset(-1); line < boxed_cast<LineOffset>(pageSize.lines); ++line)
      {
@@ -3457,9 +3757,10 @@ diff --git a/src/vtbackend/Screen_test.cpp b/src/vtbackend/Screen_test.cpp
      };
  
      REQUIRE(mock.terminal.primaryScreen().cursor().charsets.isSelected(CharsetTable::G0, CharsetId::USASCII));
-diff --git a/src/vtbackend/Selector.h b/src/vtbackend/Selector.h
---- a/src/vtbackend/Selector.h
-+++ b/src/vtbackend/Selector.h
+Index: deepin-contour/src/vtbackend/Selector.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Selector.h
++++ deepin-contour/src/vtbackend/Selector.h
 @@ -8,7 +8,7 @@
  #include <crispy/times.h>
  #include <crispy/utils.h>
@@ -3469,7 +3770,7 @@ diff --git a/src/vtbackend/Selector.h b/src/vtbackend/Selector.h
  #include <functional>
  #include <utility>
  #include <vector>
-@@ -182,7 +182,7 @@ void renderSelection(Selection const& selection, Renderer&& render)
+@@ -182,7 +182,7 @@ void renderSelection(Selection const& se
  
  // {{{ fmtlib custom formatter support
  template <>
@@ -3478,7 +3779,7 @@ diff --git a/src/vtbackend/Selector.h b/src/vtbackend/Selector.h
  {
      using State = vtbackend::Selection::State;
      auto format(State state, auto& ctx) const
-@@ -194,17 +194,17 @@ struct std::formatter<vtbackend::Selection::State>: formatter<std::string_view>
+@@ -194,17 +194,17 @@ struct std::formatter<vtbackend::Selecti
              case State::InProgress: name = "InProgress"; break;
              case State::Complete: name = "Complete"; break;
          }
@@ -3500,9 +3801,10 @@ diff --git a/src/vtbackend/Selector.h b/src/vtbackend/Selector.h
                  "{}({} from {} to {})",
                  [](auto const* selector) -> std::string_view {
                      if (dynamic_cast<vtbackend::WordWiseSelection const*>(selector))
-diff --git a/src/vtbackend/Selector_test.cpp b/src/vtbackend/Selector_test.cpp
---- a/src/vtbackend/Selector_test.cpp
-+++ b/src/vtbackend/Selector_test.cpp
+Index: deepin-contour/src/vtbackend/Selector_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Selector_test.cpp
++++ deepin-contour/src/vtbackend/Selector_test.cpp
 @@ -46,13 +46,13 @@ namespace
  template <typename T>
  [[maybe_unused]] void logScreenTextAlways(Screen<T> const& screen, string const& headline = "")
@@ -3519,9 +3821,10 @@ diff --git a/src/vtbackend/Selector_test.cpp b/src/vtbackend/Selector_test.cpp
  }
  
  template <typename T>
-diff --git a/src/vtbackend/Sequence.cpp b/src/vtbackend/Sequence.cpp
---- a/src/vtbackend/Sequence.cpp
-+++ b/src/vtbackend/Sequence.cpp
+Index: deepin-contour/src/vtbackend/Sequence.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Sequence.cpp
++++ deepin-contour/src/vtbackend/Sequence.cpp
 @@ -61,7 +61,7 @@ string Sequence::text() const
          return sstr.str();
      }
@@ -3531,9 +3834,10 @@ diff --git a/src/vtbackend/Sequence.cpp b/src/vtbackend/Sequence.cpp
  
      if (_leaderSymbol)
          sstr << ' ' << _leaderSymbol;
-diff --git a/src/vtbackend/Sequence.h b/src/vtbackend/Sequence.h
---- a/src/vtbackend/Sequence.h
-+++ b/src/vtbackend/Sequence.h
+Index: deepin-contour/src/vtbackend/Sequence.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Sequence.h
++++ deepin-contour/src/vtbackend/Sequence.h
 @@ -64,7 +64,7 @@ class SequenceParameters
  
      [[nodiscard]] std::string subParameterBitString() const
@@ -3543,10 +3847,11 @@ diff --git a/src/vtbackend/Sequence.h b/src/vtbackend/Sequence.h
      }
  
      [[nodiscard]] constexpr gsl::span<std::uint16_t> range() noexcept
-diff --git a/src/vtbackend/SixelParser_test.cpp b/src/vtbackend/SixelParser_test.cpp
---- a/src/vtbackend/SixelParser_test.cpp
-+++ b/src/vtbackend/SixelParser_test.cpp
-@@ -71,7 +71,7 @@ TEST_CASE("SixelParser.ground_111111", "[sixel]")
+Index: deepin-contour/src/vtbackend/SixelParser_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/SixelParser_test.cpp
++++ deepin-contour/src/vtbackend/SixelParser_test.cpp
+@@ -71,7 +71,7 @@ TEST_CASE("SixelParser.ground_111111", "
              auto const& actualColor =
                  ib.at(CellLocation { .line = LineOffset(y), .column = ColumnOffset(x) });
              auto const pinned = x == 0 && y >= 0 && y <= 5;
@@ -3555,7 +3860,7 @@ diff --git a/src/vtbackend/SixelParser_test.cpp b/src/vtbackend/SixelParser_test
              if (pinned)
                  CHECK(actualColor.rgb() == PinColor);
              else
-@@ -100,7 +100,7 @@ TEST_CASE("SixelParser.ground_000001", "[sixel]")
+@@ -100,7 +100,7 @@ TEST_CASE("SixelParser.ground_000001", "
      {
          for (int y = 0; y < ib.size().height.as<int>(); ++y)
          {
@@ -3564,7 +3869,7 @@ diff --git a/src/vtbackend/SixelParser_test.cpp b/src/vtbackend/SixelParser_test
              auto const& actualColor =
                  ib.at(CellLocation { .line = LineOffset(y), .column = ColumnOffset(x) });
              auto const pinned = x == 0 && y == 0;
-@@ -132,7 +132,7 @@ TEST_CASE("SixelParser.ground_010101", "[sixel]")
+@@ -132,7 +132,7 @@ TEST_CASE("SixelParser.ground_010101", "
      {
          for (int y = 0; y < ib.size().height.as<int>(); ++y)
          {
@@ -3573,7 +3878,7 @@ diff --git a/src/vtbackend/SixelParser_test.cpp b/src/vtbackend/SixelParser_test
              auto const& actualColor =
                  ib.at(CellLocation { .line = LineOffset(y), .column = ColumnOffset(x) });
              auto const pinned = x == 0 && (y < 6 && y % 2 == 0);
-@@ -164,7 +164,7 @@ TEST_CASE("SixelParser.ground_101010", "[sixel]")
+@@ -164,7 +164,7 @@ TEST_CASE("SixelParser.ground_101010", "
      {
          for (int y = 0; y < ib.size().height.as<int>(); ++y)
          {
@@ -3582,7 +3887,7 @@ diff --git a/src/vtbackend/SixelParser_test.cpp b/src/vtbackend/SixelParser_test
              auto const& actualColor =
                  ib.at(CellLocation { .line = LineOffset(y), .column = ColumnOffset(x) });
              auto const pinned = x == 0 && (y < 6 && y % 2 != 0);
-@@ -275,7 +275,7 @@ TEST_CASE("SixelParser.setAndUseColor", "[sixel]")
+@@ -275,7 +275,7 @@ TEST_CASE("SixelParser.setAndUseColor",
          auto const& expectedColor =
              x < 5 && y < 6 ? PinColors.at(static_cast<size_t>(x ? x : 4)) : DefaultColor;
          auto const& actualColor = ib.at(CellLocation { .line = LineOffset(y), .column = ColumnOffset(x) });
@@ -3591,9 +3896,10 @@ diff --git a/src/vtbackend/SixelParser_test.cpp b/src/vtbackend/SixelParser_test
          //                  CellLocation { LineOffset(y), ColumnOffset(x) },
          //                  expectedColor,
          //                  actualColor));
-diff --git a/src/vtbackend/StatusLineBuilder.cpp b/src/vtbackend/StatusLineBuilder.cpp
---- a/src/vtbackend/StatusLineBuilder.cpp
-+++ b/src/vtbackend/StatusLineBuilder.cpp
+Index: deepin-contour/src/vtbackend/StatusLineBuilder.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/StatusLineBuilder.cpp
++++ deepin-contour/src/vtbackend/StatusLineBuilder.cpp
 @@ -14,7 +14,7 @@
  
  #include <chrono>
@@ -3698,9 +4004,10 @@ diff --git a/src/vtbackend/StatusLineBuilder.cpp b/src/vtbackend/StatusLineBuild
  
      std::string visit(StatusLineDefinitions::Tabs const& tabs)
      {
-diff --git a/src/vtbackend/Terminal.cpp b/src/vtbackend/Terminal.cpp
---- a/src/vtbackend/Terminal.cpp
-+++ b/src/vtbackend/Terminal.cpp
+Index: deepin-contour/src/vtbackend/Terminal.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Terminal.cpp
++++ deepin-contour/src/vtbackend/Terminal.cpp
 @@ -25,7 +25,7 @@
  
  #include <chrono>
@@ -3710,7 +4017,7 @@ diff --git a/src/vtbackend/Terminal.cpp b/src/vtbackend/Terminal.cpp
  #include <string>
  #include <string_view>
  #include <utility>
-@@ -2405,7 +2405,7 @@ void Terminal::pushColorPalette(size_t slot)
+@@ -2405,7 +2405,7 @@ void Terminal::pushColorPalette(size_t s
  void Terminal::reportColorPaletteStack()
  {
      // XTREPORTCOLORS
@@ -3719,7 +4026,7 @@ diff --git a/src/vtbackend/Terminal.cpp b/src/vtbackend/Terminal.cpp
  }
  
  void Terminal::popColorPalette(size_t slot)
-@@ -2473,22 +2473,22 @@ void TraceHandler::flushOne(PendingSequence const& pendingSequence)
+@@ -2473,22 +2473,22 @@ void TraceHandler::flushOne(PendingSeque
      if (auto const* seq = std::get_if<Sequence>(&pendingSequence))
      {
          if (auto const* functionDefinition = seq->functionDefinition(_terminal->activeSequences()))
@@ -3764,9 +4071,10 @@ diff --git a/src/vtbackend/Terminal.cpp b/src/vtbackend/Terminal.cpp
  }
  
  } // namespace vtbackend
-diff --git a/src/vtbackend/Terminal.h b/src/vtbackend/Terminal.h
---- a/src/vtbackend/Terminal.h
-+++ b/src/vtbackend/Terminal.h
+Index: deepin-contour/src/vtbackend/Terminal.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Terminal.h
++++ deepin-contour/src/vtbackend/Terminal.h
 @@ -36,7 +36,7 @@
  #include <chrono>
  #include <condition_variable>
@@ -3776,6 +4084,18 @@ diff --git a/src/vtbackend/Terminal.h b/src/vtbackend/Terminal.h
  #include <functional>
  #include <memory>
  #include <mutex>
+@@ -780,9 +780,9 @@ class Terminal
+     void reply(std::string_view message, Ts const&... args)
+     {
+ #if defined(__APPLE__) || defined(_MSC_VER)
+-        reply(std::vformat(message, std::make_format_args(args...)));
++        reply(fmt::vformat(message, fmt::make_format_args(args...)));
+ #else
+-        reply(std::vformat(message, std::make_format_args(args...)));
++        reply(fmt::vformat(message, fmt::make_format_args(args...)));
+ #endif
+     }
+ 
 @@ -1211,44 +1211,44 @@ class Terminal
  
  // {{{ fmt formatter specializations
@@ -3831,7 +4151,7 @@ diff --git a/src/vtbackend/Terminal.h b/src/vtbackend/Terminal.h
  {
      template <typename FormatContext>
      auto format(vtbackend::DynamicColorName value, FormatContext& ctx) const
-@@ -1265,12 +1265,12 @@ struct std::formatter<vtbackend::DynamicColorName>: formatter<std::string_view>
+@@ -1265,12 +1265,12 @@ struct std::formatter<vtbackend::Dynamic
              case DynamicColorName::HighlightForegroundColor: name = "HighlightForegroundColor"; break;
              case DynamicColorName::HighlightBackgroundColor: name = "HighlightBackgroundColor"; break;
          }
@@ -3846,7 +4166,7 @@ diff --git a/src/vtbackend/Terminal.h b/src/vtbackend/Terminal.h
  {
      auto format(vtbackend::ExecutionMode value, auto& ctx) const
      {
-@@ -1282,7 +1282,7 @@ struct std::formatter<vtbackend::ExecutionMode>: formatter<std::string_view>
+@@ -1282,7 +1282,7 @@ struct std::formatter<vtbackend::Executi
              case vtbackend::ExecutionMode::SingleStep: name = "SINGLE STEP"; break;
              case vtbackend::ExecutionMode::BreakAtEmptyQueue: name = "BREAK AT EMPTY"; break;
          }
@@ -3855,10 +4175,11 @@ diff --git a/src/vtbackend/Terminal.h b/src/vtbackend/Terminal.h
      }
  };
  
-diff --git a/src/vtbackend/Terminal_test.cpp b/src/vtbackend/Terminal_test.cpp
---- a/src/vtbackend/Terminal_test.cpp
-+++ b/src/vtbackend/Terminal_test.cpp
-@@ -109,7 +109,7 @@ TEST_CASE("Terminal.DECCARA", "[terminal]")
+Index: deepin-contour/src/vtbackend/Terminal_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/Terminal_test.cpp
++++ deepin-contour/src/vtbackend/Terminal_test.cpp
+@@ -109,7 +109,7 @@ TEST_CASE("Terminal.DECCARA", "[terminal
      auto const bottom = 4;
      auto const right = 5;
      mock.writeToScreen(
@@ -3867,7 +4188,7 @@ diff --git a/src/vtbackend/Terminal_test.cpp b/src/vtbackend/Terminal_test.cpp
  
      mock.terminal.tick(ClockBase + chrono::seconds(2));
      mock.terminal.ensureFreshRenderBuffer();
-@@ -124,8 +124,8 @@ TEST_CASE("Terminal.DECCARA", "[terminal]")
+@@ -124,8 +124,8 @@ TEST_CASE("Terminal.DECCARA", "[terminal
              // clang-format off
              auto const& someCell = mock.terminal.primaryScreen().at(LineOffset(line - 1), ColumnOffset(column - 1));
              auto const rgb = someCell.foregroundColor().rgb();
@@ -3878,7 +4199,7 @@ diff --git a/src/vtbackend/Terminal_test.cpp b/src/vtbackend/Terminal_test.cpp
              CHECK(colorDec == "171/178/191");
              CHECK(someCell.isFlagEnabled(vtbackend::CellFlag::Bold));
              CHECK(someCell.isFlagEnabled(vtbackend::CellFlag::Underline));
-@@ -150,8 +150,8 @@ TEST_CASE("Terminal.CaptureScreenBuffer")
+@@ -150,8 +150,8 @@ TEST_CASE("Terminal.CaptureScreenBuffer"
      // fill screen buffer (5 lines into history + full 5 lines page buffer)
      for (int i = 1; i <= 10; ++i)
      {
@@ -3889,7 +4210,7 @@ diff --git a/src/vtbackend/Terminal_test.cpp b/src/vtbackend/Terminal_test.cpp
      }
  
      mock.terminal.tick(ClockBase + chrono::seconds(1));
-@@ -160,7 +160,7 @@ TEST_CASE("Terminal.CaptureScreenBuffer")
+@@ -160,7 +160,7 @@ TEST_CASE("Terminal.CaptureScreenBuffer"
      REQUIRE("6\n7\n8\n9\n10" == actualScreen1);
      logScreenText(mock.terminal, "fini");
  
@@ -3898,9 +4219,10 @@ diff --git a/src/vtbackend/Terminal_test.cpp b/src/vtbackend/Terminal_test.cpp
      mock.terminal.flushInput();
      logScreenText(mock.terminal, "after flush");
  
-diff --git a/src/vtbackend/VTType.h b/src/vtbackend/VTType.h
---- a/src/vtbackend/VTType.h
-+++ b/src/vtbackend/VTType.h
+Index: deepin-contour/src/vtbackend/VTType.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/VTType.h
++++ deepin-contour/src/vtbackend/VTType.h
 @@ -3,7 +3,7 @@
  
  #include <crispy/assert.h>
@@ -3910,7 +4232,7 @@ diff --git a/src/vtbackend/VTType.h b/src/vtbackend/VTType.h
  #include <string>
  
  namespace vtbackend
-@@ -79,7 +79,7 @@ std::string to_params(DeviceAttributes v);
+@@ -79,7 +79,7 @@ std::string to_params(DeviceAttributes v
  
  // {{{ fmtlib support
  template <>
@@ -3919,7 +4241,7 @@ diff --git a/src/vtbackend/VTType.h b/src/vtbackend/VTType.h
  {
      auto format(const vtbackend::VTType id, auto& ctx) const
      {
-@@ -97,11 +97,11 @@ struct std::formatter<vtbackend::VTType>: std::formatter<std::string_view>
+@@ -97,11 +97,11 @@ struct std::formatter<vtbackend::VTType>
              case vtbackend::VTType::VT520: name = "VT520"; break;
              case vtbackend::VTType::VT525: name = "VT525"; break;
          }
@@ -3933,7 +4255,7 @@ diff --git a/src/vtbackend/VTType.h b/src/vtbackend/VTType.h
  {
      auto format(const vtbackend::VTExtension id, auto& ctx) const
      {
-@@ -113,7 +113,7 @@ struct std::formatter<vtbackend::VTExtension>: std::formatter<std::string_view>
+@@ -113,7 +113,7 @@ struct std::formatter<vtbackend::VTExten
              case vtbackend::VTExtension::XTerm: name = "XTerm"; break;
              case vtbackend::VTExtension::Contour: name = "Contour"; break;
          }
@@ -3942,10 +4264,11 @@ diff --git a/src/vtbackend/VTType.h b/src/vtbackend/VTType.h
      }
  };
  // }}}
-diff --git a/src/vtbackend/VTWriter.cpp b/src/vtbackend/VTWriter.cpp
---- a/src/vtbackend/VTWriter.cpp
-+++ b/src/vtbackend/VTWriter.cpp
-@@ -68,11 +68,11 @@ string VTWriter::sgrFlush(vector<unsigned> const& sgr)
+Index: deepin-contour/src/vtbackend/VTWriter.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/VTWriter.cpp
++++ deepin-contour/src/vtbackend/VTWriter.cpp
+@@ -68,11 +68,11 @@ string VTWriter::sgrFlush(vector<unsigne
                           end(sgr),
                           string {},
                           [](auto a, auto b) {
@@ -3959,9 +4282,10 @@ diff --git a/src/vtbackend/VTWriter.cpp b/src/vtbackend/VTWriter.cpp
  }
  
  void VTWriter::sgrAddExplicit(unsigned n)
-diff --git a/src/vtbackend/VTWriter.h b/src/vtbackend/VTWriter.h
---- a/src/vtbackend/VTWriter.h
-+++ b/src/vtbackend/VTWriter.h
+Index: deepin-contour/src/vtbackend/VTWriter.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/VTWriter.h
++++ deepin-contour/src/vtbackend/VTWriter.h
 @@ -8,7 +8,7 @@
  
  #include <libunicode/convert.h>
@@ -3971,9 +4295,22 @@ diff --git a/src/vtbackend/VTWriter.h b/src/vtbackend/VTWriter.h
  #include <functional>
  #include <ostream>
  #include <sstream>
-diff --git a/src/vtbackend/ViCommands.cpp b/src/vtbackend/ViCommands.cpp
---- a/src/vtbackend/ViCommands.cpp
-+++ b/src/vtbackend/ViCommands.cpp
+@@ -75,9 +75,9 @@ template <typename... Ts>
+ inline void VTWriter::write(std::format_string<Ts...> fmt, Ts const&... args)
+ {
+ #if defined(__APPLE__)
+-    write(std::vformat(fmt, std::make_format_args(args...)));
++    write(fmt::vformat(fmt, fmt::make_format_args(args...)));
+ #else
+-    write(std::vformat(fmt, std::make_format_args(std::forward<Ts>(args)...)));
++    write(fmt::vformat(fmt, fmt::make_format_args(std::forward<Ts>(args)...)));
+ #endif
+ }
+ 
+Index: deepin-contour/src/vtbackend/ViCommands.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/ViCommands.cpp
++++ deepin-contour/src/vtbackend/ViCommands.cpp
 @@ -7,7 +7,7 @@
  
  #include <libunicode/ucd.h>
@@ -3983,10 +4320,11 @@ diff --git a/src/vtbackend/ViCommands.cpp b/src/vtbackend/ViCommands.cpp
  #include <memory>
  
  namespace vtbackend
-diff --git a/src/vtbackend/ViInputHandler.cpp b/src/vtbackend/ViInputHandler.cpp
---- a/src/vtbackend/ViInputHandler.cpp
-+++ b/src/vtbackend/ViInputHandler.cpp
-@@ -184,18 +184,18 @@ void ViInputHandler::registerAllCommands()
+Index: deepin-contour/src/vtbackend/ViInputHandler.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/ViInputHandler.cpp
++++ deepin-contour/src/vtbackend/ViInputHandler.cpp
+@@ -184,18 +184,18 @@ void ViInputHandler::registerAllCommands
  
          // operate on the full line, with yy or oo.
          registerCommand(ModeSelect::Normal,
@@ -4008,7 +4346,7 @@ diff --git a/src/vtbackend/ViInputHandler.cpp b/src/vtbackend/ViInputHandler.cpp
          registerCommand(ModeSelect::Normal, s3('t'), [this, op]() { _executor->execute(op, ViMotion::TillBeforeCharRight, count(), _lastChar); });
          registerCommand(ModeSelect::Normal, s3('T'), [this, op]() { _executor->execute(op, ViMotion::TillAfterCharLeft, count(), _lastChar); });
          registerCommand(ModeSelect::Normal, s3('f'), [this, op]() { _executor->execute(op, ViMotion::ToCharRight, count(), _lastChar); });
-@@ -208,10 +208,10 @@ void ViInputHandler::registerAllCommands()
+@@ -208,10 +208,10 @@ void ViInputHandler::registerAllCommands
          for (auto const& [objectChar, obj]: TextObjectMappings)
          {
              registerCommand(ModeSelect::Normal,
@@ -4021,7 +4359,7 @@ diff --git a/src/vtbackend/ViInputHandler.cpp b/src/vtbackend/ViInputHandler.cpp
                              [this, scope = scope, obj = obj]() { _executor->open(scope, obj); });
          }
      }
-@@ -231,7 +231,7 @@ void ViInputHandler::registerAllCommands()
+@@ -231,7 +231,7 @@ void ViInputHandler::registerAllCommands
      for (auto const& [scopeChar, scope]: ScopeMappings)
          for (auto const& [objectChar, obj]: TextObjectMappings)
              registerCommand(ModeSelect::Visual,
@@ -4030,7 +4368,7 @@ diff --git a/src/vtbackend/ViInputHandler.cpp b/src/vtbackend/ViInputHandler.cpp
                              [this, scope = scope, obj = obj]() { _executor->select(scope, obj); });
  }
  
-@@ -291,7 +291,7 @@ void ViInputHandler::handlePendingInput()
+@@ -291,7 +291,7 @@ void ViInputHandler::handlePendingInput(
      auto const mappingResult = mapping.search(_pendingInput, TrieMapAllowWildcardDot);
      if (std::holds_alternative<crispy::exact_match<CommandHandler>>(mappingResult))
      {
@@ -4039,10 +4377,11 @@ diff --git a/src/vtbackend/ViInputHandler.cpp b/src/vtbackend/ViInputHandler.cpp
          _lastChar =
              unicode::convert_to<char32_t>(std::string_view(_pendingInput.data(), _pendingInput.size()))
                  .back();
-diff --git a/src/vtbackend/ViInputHandler.h b/src/vtbackend/ViInputHandler.h
---- a/src/vtbackend/ViInputHandler.h
-+++ b/src/vtbackend/ViInputHandler.h
-@@ -270,7 +270,7 @@ class ViInputHandler: public InputHandler
+Index: deepin-contour/src/vtbackend/ViInputHandler.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/ViInputHandler.h
++++ deepin-contour/src/vtbackend/ViInputHandler.h
+@@ -270,7 +270,7 @@ class ViInputHandler: public InputHandle
  
  // {{{ fmtlib custom formatters
  template <>
@@ -4051,7 +4390,7 @@ diff --git a/src/vtbackend/ViInputHandler.h b/src/vtbackend/ViInputHandler.h
  {
      auto format(vtbackend::TextObjectScope scope, auto& ctx) const
      {
-@@ -281,12 +281,12 @@ struct std::formatter<vtbackend::TextObjectScope>: formatter<std::string_view>
+@@ -281,12 +281,12 @@ struct std::formatter<vtbackend::TextObj
              case TextObjectScope::Inner: name = "inner"; break;
              case TextObjectScope::A: name = "a"; break;
          }
@@ -4066,7 +4405,7 @@ diff --git a/src/vtbackend/ViInputHandler.h b/src/vtbackend/ViInputHandler.h
  {
      auto format(vtbackend::TextObject textObject, auto& ctx) const
      {
-@@ -306,12 +306,12 @@ struct std::formatter<vtbackend::TextObject>: formatter<std::string_view>
+@@ -306,12 +306,12 @@ struct std::formatter<vtbackend::TextObj
              case TextObject::Word: name = "Word"; break;
              case TextObject::BigWord: name = "BigWord"; break;
          }
@@ -4081,7 +4420,7 @@ diff --git a/src/vtbackend/ViInputHandler.h b/src/vtbackend/ViInputHandler.h
  {
      auto format(vtbackend::ViOperator op, auto& ctx) const
      {
-@@ -326,12 +326,12 @@ struct std::formatter<vtbackend::ViOperator>: formatter<std::string_view>
+@@ -326,12 +326,12 @@ struct std::formatter<vtbackend::ViOpera
              case ViOperator::PasteStripped: name = "PasteStripped"; break;
              case ViOperator::ReverseSearchCurrentWord: name = "ReverseSearchCurrentWord"; break;
          }
@@ -4096,7 +4435,7 @@ diff --git a/src/vtbackend/ViInputHandler.h b/src/vtbackend/ViInputHandler.h
  {
      auto format(vtbackend::ViMotion motion, auto& ctx) const
      {
-@@ -384,7 +384,7 @@ struct std::formatter<vtbackend::ViMotion>: formatter<std::string_view>
+@@ -384,7 +384,7 @@ struct std::formatter<vtbackend::ViMotio
              case ViMotion::LineMarkUp: name = "LineMarkUp"; break;
              case ViMotion::LineMarkDown: name = "LineMarkDown"; break;
          }
@@ -4105,9 +4444,10 @@ diff --git a/src/vtbackend/ViInputHandler.h b/src/vtbackend/ViInputHandler.h
      }
  };
  
-diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
---- a/src/vtbackend/bench-headless.cpp
-+++ b/src/vtbackend/bench-headless.cpp
+Index: deepin-contour/src/vtbackend/bench-headless.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/bench-headless.cpp
++++ deepin-contour/src/vtbackend/bench-headless.cpp
 @@ -13,7 +13,7 @@
  #include <crispy/CLI.h>
  #include <crispy/utils.h>
@@ -4117,7 +4457,7 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
  #include <iostream>
  #include <optional>
  #include <thread>
-@@ -59,7 +59,7 @@ int baseBenchmark(Writer&& writer, BenchOptions options, string_view title)
+@@ -59,7 +59,7 @@ int baseBenchmark(Writer&& writer, Bench
          options.sgr = true;
      }
  
@@ -4126,7 +4466,7 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
  
      cout << titleText << '\n' << string(titleText.size(), '=') << '\n';
  
-@@ -67,7 +67,7 @@ int baseBenchmark(Writer&& writer, BenchOptions options, string_view title)
+@@ -67,7 +67,7 @@ int baseBenchmark(Writer&& writer, Bench
                                        options.testSizeMB,
                                        termbench::TerminalSize { 80, 24 },
                                        [&](termbench::Test const& test) {
@@ -4135,7 +4475,7 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
                                        } };
  
      if (options.manyLines)
-@@ -162,17 +162,17 @@ class ContourHeadlessBench: public crispy::app
+@@ -162,17 +162,17 @@ class ContourHeadlessBench: public crisp
      static int showMetaInfo()
      {
          // Show any interesting meta information.
@@ -4159,7 +4499,7 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
          auto opts = BenchOptions {};
          opts.testSizeMB = parameters().uint(prefix + "size");
          opts.manyLines = parameters().boolean(prefix + "cat");
-@@ -206,7 +206,7 @@ class ContourHeadlessBench: public crispy::app
+@@ -206,7 +206,7 @@ class ContourHeadlessBench: public crisp
              benchOptionsFor("grid"),
              "terminal with screen buffer");
          if (rv == EXIT_SUCCESS)
@@ -4168,7 +4508,7 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
          return rv;
      }
  
-@@ -257,7 +257,7 @@ class ContourHeadlessBench: public crispy::app
+@@ -257,7 +257,7 @@ class ContourHeadlessBench: public crisp
          } };
  
          // Perform benchmark
@@ -4177,7 +4517,7 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
          auto const startTime = steady_clock::now();
          auto stopTime = startTime;
          while (stopTime - startTime < benchTime)
-@@ -276,22 +276,22 @@ class ContourHeadlessBench: public crispy::app
+@@ -276,22 +276,22 @@ class ContourHeadlessBench: public crisp
          auto const mbPerSecs =
              static_cast<long double>(bytesTransferred) / static_cast<long double>(secs.count());
  
@@ -4211,10 +4551,11 @@ diff --git a/src/vtbackend/bench-headless.cpp b/src/vtbackend/bench-headless.cpp
                                   crispy::humanReadableBytes(static_cast<uint64_t>(mbPerSecs)));
  
          return EXIT_SUCCESS;
-diff --git a/src/vtbackend/cell/CompactCell.h b/src/vtbackend/cell/CompactCell.h
---- a/src/vtbackend/cell/CompactCell.h
-+++ b/src/vtbackend/cell/CompactCell.h
-@@ -482,7 +482,7 @@ inline bool beginsWith(std::u32string_view text, CompactCell const& cell) noexce
+Index: deepin-contour/src/vtbackend/cell/CompactCell.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/cell/CompactCell.h
++++ deepin-contour/src/vtbackend/cell/CompactCell.h
+@@ -482,7 +482,7 @@ inline bool beginsWith(std::u32string_vi
  } // namespace vtbackend
  
  template <>
@@ -4223,7 +4564,7 @@ diff --git a/src/vtbackend/cell/CompactCell.h b/src/vtbackend/cell/CompactCell.h
  {
      auto format(vtbackend::CompactCell const& cell, auto& ctx) const
      {
-@@ -491,9 +491,9 @@ struct std::formatter<vtbackend::CompactCell>: std::formatter<std::string>
+@@ -491,9 +491,9 @@ struct std::formatter<vtbackend::Compact
          {
              if (i)
                  codepoints += ", ";
@@ -4235,9 +4576,10 @@ diff --git a/src/vtbackend/cell/CompactCell.h b/src/vtbackend/cell/CompactCell.h
                                                ctx);
      }
  };
-diff --git a/src/vtbackend/doc-tool.cpp b/src/vtbackend/doc-tool.cpp
---- a/src/vtbackend/doc-tool.cpp
-+++ b/src/vtbackend/doc-tool.cpp
+Index: deepin-contour/src/vtbackend/doc-tool.cpp
+===================================================================
+--- deepin-contour.orig/src/vtbackend/doc-tool.cpp
++++ deepin-contour/src/vtbackend/doc-tool.cpp
 @@ -1,7 +1,7 @@
  // SPDX-License-Identifier: Apache-2.0
  #include <vtbackend/Functions.h>
@@ -4304,9 +4646,10 @@ diff --git a/src/vtbackend/doc-tool.cpp b/src/vtbackend/doc-tool.cpp
          }
      }
      return EXIT_SUCCESS;
-diff --git a/src/vtbackend/primitives.h b/src/vtbackend/primitives.h
---- a/src/vtbackend/primitives.h
-+++ b/src/vtbackend/primitives.h
+Index: deepin-contour/src/vtbackend/primitives.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/primitives.h
++++ deepin-contour/src/vtbackend/primitives.h
 @@ -147,7 +147,7 @@ struct [[nodiscard]] CellLocation
  
  inline std::ostream& operator<<(std::ostream& os, CellLocation coord)
@@ -4316,7 +4659,7 @@ diff --git a/src/vtbackend/primitives.h b/src/vtbackend/primitives.h
  }
  
  inline CellLocation operator+(CellLocation a, CellLocation b) noexcept
-@@ -886,7 +886,7 @@ struct numeric_limits<vtbackend::CursorShape>
+@@ -886,7 +886,7 @@ struct numeric_limits<vtbackend::CursorS
  
  // {{{ fmt formatter
  template <>
@@ -4325,7 +4668,7 @@ diff --git a/src/vtbackend/primitives.h b/src/vtbackend/primitives.h
  {
      auto format(vtbackend::CursorShape value, auto& ctx) const
      {
-@@ -898,39 +898,39 @@ struct std::formatter<vtbackend::CursorShape>: formatter<std::string_view>
+@@ -898,39 +898,39 @@ struct std::formatter<vtbackend::CursorS
              case vtbackend::CursorShape::Rectangle: name = "Rectangle"; break;
              case vtbackend::CursorShape::Underscore: name = "Underscore"; break;
          }
@@ -4373,7 +4716,7 @@ diff --git a/src/vtbackend/primitives.h b/src/vtbackend/primitives.h
  {
      auto format(const vtbackend::ScreenType value, auto& ctx) const
      {
-@@ -940,21 +940,21 @@ struct std::formatter<vtbackend::ScreenType>: formatter<std::string_view>
+@@ -940,21 +940,21 @@ struct std::formatter<vtbackend::ScreenT
              case vtbackend::ScreenType::Primary: name = "Primary"; break;
              case vtbackend::ScreenType::Alternate: name = "Alternate"; break;
          }
@@ -4399,7 +4742,7 @@ diff --git a/src/vtbackend/primitives.h b/src/vtbackend/primitives.h
  {
      auto format(vtbackend::ViMode mode, auto& ctx) const
      {
-@@ -968,7 +968,7 @@ struct std::formatter<vtbackend::ViMode>: formatter<std::string_view>
+@@ -968,7 +968,7 @@ struct std::formatter<vtbackend::ViMode>
              case ViMode::VisualLine: name = "VisualLine"; break;
              case ViMode::VisualBlock: name = "VisualBlock"; break;
          }
@@ -4408,9 +4751,10 @@ diff --git a/src/vtbackend/primitives.h b/src/vtbackend/primitives.h
      }
  };
  
-diff --git a/src/vtbackend/test_helpers.h b/src/vtbackend/test_helpers.h
---- a/src/vtbackend/test_helpers.h
-+++ b/src/vtbackend/test_helpers.h
+Index: deepin-contour/src/vtbackend/test_helpers.h
+===================================================================
+--- deepin-contour.orig/src/vtbackend/test_helpers.h
++++ deepin-contour/src/vtbackend/test_helpers.h
 @@ -101,13 +101,13 @@ template <typename T>
  template <typename T>
  void logScreenTextAlways(Screen<T> const& screen, std::string const& headline = "")
@@ -4427,7 +4771,7 @@ diff --git a/src/vtbackend/test_helpers.h b/src/vtbackend/test_helpers.h
  }
  
  template <typename T>
-@@ -125,7 +125,7 @@ void logScreenText(Screen<T> const& screen, std::string const& headline = "")
+@@ -125,7 +125,7 @@ void logScreenText(Screen<T> const& scre
          UNSCOPED_INFO(headline + ":");
  
      for (auto const line: ::ranges::views::iota(0, *screen.pageSize().lines))
@@ -4436,10 +4780,11 @@ diff --git a/src/vtbackend/test_helpers.h b/src/vtbackend/test_helpers.h
  }
  
  inline void logScreenText(vtbackend::Terminal const& terminal, std::string const& headline = "")
-diff --git a/src/vtparser/Parser-impl.h b/src/vtparser/Parser-impl.h
---- a/src/vtparser/Parser-impl.h
-+++ b/src/vtparser/Parser-impl.h
-@@ -349,7 +349,7 @@ void Parser<EventListener, TraceStateChanges>::processOnceViaStateMachine(uint8_
+Index: deepin-contour/src/vtparser/Parser-impl.h
+===================================================================
+--- deepin-contour.orig/src/vtparser/Parser-impl.h
++++ deepin-contour/src/vtparser/Parser-impl.h
+@@ -349,7 +349,7 @@ void Parser<EventListener, TraceStateCha
  
      if (auto const t = Table.transitions[s][static_cast<uint8_t>(ch)]; t != State::Undefined)
      {
@@ -4448,9 +4793,10 @@ diff --git a/src/vtparser/Parser-impl.h b/src/vtparser/Parser-impl.h
          handle(ActionClass::Leave, Table.exitEvents[s], ch);
          handle(ActionClass::Transition, Table.events[s][static_cast<size_t>(ch)], ch);
          _state = t;
-diff --git a/src/vtparser/Parser.cpp b/src/vtparser/Parser.cpp
---- a/src/vtparser/Parser.cpp
-+++ b/src/vtparser/Parser.cpp
+Index: deepin-contour/src/vtparser/Parser.cpp
+===================================================================
+--- deepin-contour.orig/src/vtparser/Parser.cpp
++++ deepin-contour/src/vtparser/Parser.cpp
 @@ -4,7 +4,7 @@
  
  #include <range/v3/view/enumerate.hpp>
@@ -4469,7 +4815,7 @@ diff --git a/src/vtparser/Parser.cpp b/src/vtparser/Parser.cpp
                  //  targetState);
                  auto const t = Transition { static_cast<State>(sourceState), targetState };
                  if (!transitions[t].empty() && ch == transitions[t].back().last + 1)
-@@ -63,18 +63,18 @@ void parserTableDot(std::ostream& os) // {{{
+@@ -63,18 +63,18 @@ void parserTableDot(std::ostream& os) //
              continue;
  
          auto const targetStateName = targetState == State::Ground && targetState != sourceState
@@ -4493,7 +4839,7 @@ diff --git a/src/vtparser/Parser.cpp b/src/vtparser/Parser.cpp
          os << "[";
          os << "label=\"";
          for (auto const&& [rangeCount, u]: enumerate(t.second))
-@@ -86,9 +86,9 @@ void parserTableDot(std::ostream& os) // {{{
+@@ -86,9 +86,9 @@ void parserTableDot(std::ostream& os) //
                      os << "\\n";
              }
              if (u.first == u.last)
@@ -4505,7 +4851,7 @@ diff --git a/src/vtparser/Parser.cpp b/src/vtparser/Parser.cpp
          }
          os << "\"";
          os << "]";
-@@ -98,12 +98,12 @@ void parserTableDot(std::ostream& os) // {{{
+@@ -98,12 +98,12 @@ void parserTableDot(std::ostream& os) //
      // equal ranks
      os << "  { rank=same; ";
      for (auto const state: { State::CSI_Entry, State::DCS_Entry, State::OSC_String })
@@ -4520,9 +4866,10 @@ diff --git a/src/vtparser/Parser.cpp b/src/vtparser/Parser.cpp
      os << "};\n";
  
      os << "}\n";
-diff --git a/src/vtparser/Parser.h b/src/vtparser/Parser.h
---- a/src/vtparser/Parser.h
-+++ b/src/vtparser/Parser.h
+Index: deepin-contour/src/vtparser/Parser.h
+===================================================================
+--- deepin-contour.orig/src/vtparser/Parser.h
++++ deepin-contour/src/vtparser/Parser.h
 @@ -10,7 +10,7 @@
  #include <array>
  #include <concepts>
@@ -4569,10 +4916,11 @@ diff --git a/src/vtparser/Parser.h b/src/vtparser/Parser.h
      }
  };
  // }}}
-diff --git a/src/vtparser/Parser_test.cpp b/src/vtparser/Parser_test.cpp
---- a/src/vtparser/Parser_test.cpp
-+++ b/src/vtparser/Parser_test.cpp
-@@ -16,7 +16,7 @@ class MockParserEvents final: public vtparser::NullParserEvents
+Index: deepin-contour/src/vtparser/Parser_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtparser/Parser_test.cpp
++++ deepin-contour/src/vtparser/Parser_test.cpp
+@@ -16,7 +16,7 @@ class MockParserEvents final: public vtp
      std::string pm;
      size_t maxCharCount = 80;
  
@@ -4581,9 +4929,10 @@ diff --git a/src/vtparser/Parser_test.cpp b/src/vtparser/Parser_test.cpp
      void print(char32_t ch) override { text += unicode::convert_to<char>(ch); }
      size_t print(std::string_view s, size_t cellCount) override
      {
-diff --git a/src/vtpty/ImageSize.h b/src/vtpty/ImageSize.h
---- a/src/vtpty/ImageSize.h
-+++ b/src/vtpty/ImageSize.h
+Index: deepin-contour/src/vtpty/ImageSize.h
+===================================================================
+--- deepin-contour.orig/src/vtpty/ImageSize.h
++++ deepin-contour/src/vtpty/ImageSize.h
 @@ -2,7 +2,7 @@
  #pragma once
  
@@ -4593,7 +4942,7 @@ diff --git a/src/vtpty/ImageSize.h b/src/vtpty/ImageSize.h
  
  #include <boxed-cpp/boxed.hpp>
  
-@@ -90,11 +90,11 @@ constexpr ImageSize max(ImageSize a, ImageSize b) noexcept
+@@ -90,11 +90,11 @@ constexpr ImageSize max(ImageSize a, Ima
  } // namespace vtpty
  
  template <>
@@ -4607,9 +4956,10 @@ diff --git a/src/vtpty/ImageSize.h b/src/vtpty/ImageSize.h
                                                ctx);
      }
  };
-diff --git a/src/vtpty/Process.h b/src/vtpty/Process.h
---- a/src/vtpty/Process.h
-+++ b/src/vtpty/Process.h
+Index: deepin-contour/src/vtpty/Process.h
+===================================================================
+--- deepin-contour.orig/src/vtpty/Process.h
++++ deepin-contour/src/vtpty/Process.h
 @@ -7,7 +7,7 @@
  #include <crispy/overloaded.h>
  
@@ -4651,9 +5001,10 @@ diff --git a/src/vtpty/Process.h b/src/vtpty/Process.h
 +        return fmt::formatter<std::string>::format(text, ctx);
      }
  };
-diff --git a/src/vtpty/Process_unix.cpp b/src/vtpty/Process_unix.cpp
---- a/src/vtpty/Process_unix.cpp
-+++ b/src/vtpty/Process_unix.cpp
+Index: deepin-contour/src/vtpty/Process_unix.cpp
+===================================================================
+--- deepin-contour.orig/src/vtpty/Process_unix.cpp
++++ deepin-contour/src/vtpty/Process_unix.cpp
 @@ -12,7 +12,7 @@
  #include <cstdlib>
  #include <cstring>
@@ -4692,7 +5043,7 @@ diff --git a/src/vtpty/Process_unix.cpp b/src/vtpty/Process_unix.cpp
                  realArgs.push_back(_d->path);
                  for (auto const& arg: _d->args)
                      realArgs.push_back(arg);
-@@ -331,7 +331,7 @@ vector<string> Process::loginShell(bool escapeSandbox)
+@@ -331,7 +331,7 @@ vector<string> Process::loginShell(bool
          if (isFlatpak() && escapeSandbox)
          {
              char buf[1024];
@@ -4710,9 +5061,10 @@ diff --git a/src/vtpty/Process_unix.cpp b/src/vtpty/Process_unix.cpp
          auto const cwd = fs::read_symlink(path);
          return cwd.string();
      }
-diff --git a/src/vtpty/Process_win32.cpp b/src/vtpty/Process_win32.cpp
---- a/src/vtpty/Process_win32.cpp
-+++ b/src/vtpty/Process_win32.cpp
+Index: deepin-contour/src/vtpty/Process_win32.cpp
+===================================================================
+--- deepin-contour.orig/src/vtpty/Process_win32.cpp
++++ deepin-contour/src/vtpty/Process_win32.cpp
 @@ -12,7 +12,7 @@
  #include <cstdlib>
  #include <cstring>
@@ -4731,10 +5083,11 @@ diff --git a/src/vtpty/Process_win32.cpp b/src/vtpty/Process_win32.cpp
          }
      }
      auto const envScope = InheritingEnvBlock { env };
-diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
---- a/src/vtpty/SshSession.cpp
-+++ b/src/vtpty/SshSession.cpp
-@@ -186,15 +186,15 @@ std::string SshHostConfig::toString() const
+Index: deepin-contour/src/vtpty/SshSession.cpp
+===================================================================
+--- deepin-contour.orig/src/vtpty/SshSession.cpp
++++ deepin-contour/src/vtpty/SshSession.cpp
+@@ -186,15 +186,15 @@ std::string SshHostConfig::toString() co
          }
      };
      if (!username.empty())
@@ -4753,7 +5106,7 @@ diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
          }
          else
              result += hostname;
-@@ -203,15 +203,15 @@ std::string SshHostConfig::toString() const
+@@ -203,15 +203,15 @@ std::string SshHostConfig::toString() co
          result += "*:" + std::to_string(port);
  
      if (!privateKeyFile.empty())
@@ -4773,7 +5126,7 @@ diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
  
      return result;
  }
-@@ -222,20 +222,20 @@ std::string SshHostConfig::toConfigString(std::string const& host) const
+@@ -222,20 +222,20 @@ std::string SshHostConfig::toConfigStrin
      auto const prefix = host.empty() ? ""sv : "  "sv;
  
      if (!host.empty())
@@ -4811,7 +5164,7 @@ diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
                  injectRead("\U0001F511 Password: ");
                  [[fallthrough]];
              }
-@@ -920,7 +920,7 @@ void SshSession::injectRead(std::string_view buf)
+@@ -920,7 +920,7 @@ void SshSession::injectRead(std::string_
  
  void SshSession::logInject(std::string_view message) const
  {
@@ -4820,7 +5173,7 @@ diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
  }
  
  void SshSession::logInfo(std::string_view message) const
-@@ -996,7 +996,7 @@ bool SshSession::connect(std::string_view host, int port)
+@@ -996,7 +996,7 @@ bool SshSession::connect(std::string_vie
              if (::connect(_p->sshSocket, addrEntry->ai_addr, addrEntry->ai_addrlen) == 0)
              {
                  auto const addrAndPort =
@@ -4838,7 +5191,7 @@ diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
              auto const typeMask = LIBSSH2_KNOWNHOST_TYPE_PLAIN | LIBSSH2_KNOWNHOST_KEYENC_RAW | knownhostType;
              libssh2_knownhost_addc(knownHosts,
                                     _config.hostname.c_str(),
-@@ -1166,19 +1166,19 @@ int SshSession::waitForSocket(std::optional<std::chrono::milliseconds> timeout)
+@@ -1166,19 +1166,19 @@ int SshSession::waitForSocket(std::optio
      if (dir & LIBSSH2_SESSION_BLOCK_INBOUND)
      {
          readfd = &fd;
@@ -4861,9 +5214,10 @@ diff --git a/src/vtpty/SshSession.cpp b/src/vtpty/SshSession.cpp
                               crispy::threadName(),
                               rc,
                               readfd && FD_ISSET(_p->sshSocket, readfd) ? " [readable]" : "",
-diff --git a/src/vtpty/SshSession.h b/src/vtpty/SshSession.h
---- a/src/vtpty/SshSession.h
-+++ b/src/vtpty/SshSession.h
+Index: deepin-contour/src/vtpty/SshSession.h
+===================================================================
+--- deepin-contour.orig/src/vtpty/SshSession.h
++++ deepin-contour/src/vtpty/SshSession.h
 @@ -130,13 +130,13 @@ class SshSession final: public Pty
      template <typename... Args>
      void logInfoWithInject(std::format_string<Args...> fmt, Args&&... args) const
@@ -4898,7 +5252,7 @@ diff --git a/src/vtpty/SshSession.h b/src/vtpty/SshSession.h
  {
      auto format(vtpty::SshSession::State const& state, auto& ctx) const
      {
-@@ -204,32 +204,32 @@ struct std::formatter<vtpty::SshSession::State>: std::formatter<std::string_view
+@@ -204,32 +204,32 @@ struct std::formatter<vtpty::SshSession:
              case vtpty::SshSession::State::Closed: name = "Closed"; break;
          }
          // clang-format on
@@ -4939,9 +5293,10 @@ diff --git a/src/vtpty/SshSession.h b/src/vtpty/SshSession.h
 +        return fmt::formatter<std::string>::format(config.toString(), ctx);
      }
  };
-diff --git a/src/vtrasterizer/BoxDrawingRenderer.cpp b/src/vtrasterizer/BoxDrawingRenderer.cpp
---- a/src/vtrasterizer/BoxDrawingRenderer.cpp
-+++ b/src/vtrasterizer/BoxDrawingRenderer.cpp
+Index: deepin-contour/src/vtrasterizer/BoxDrawingRenderer.cpp
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/BoxDrawingRenderer.cpp
++++ deepin-contour/src/vtrasterizer/BoxDrawingRenderer.cpp
 @@ -11,7 +11,7 @@
  
  #include <array>
@@ -4969,9 +5324,10 @@ diff --git a/src/vtrasterizer/BoxDrawingRenderer.cpp b/src/vtrasterizer/BoxDrawi
              //            position, x, y, x0, y0, x1, y1);
  
              fillBlock(image, size, { x0 / 2_th, y0 / 3_th }, { x1 / 2_th, y1 / 3_th }, [](int, int) {
-diff --git a/src/vtrasterizer/Decorator.h b/src/vtrasterizer/Decorator.h
---- a/src/vtrasterizer/Decorator.h
-+++ b/src/vtrasterizer/Decorator.h
+Index: deepin-contour/src/vtrasterizer/Decorator.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/Decorator.h
++++ deepin-contour/src/vtrasterizer/Decorator.h
 @@ -2,7 +2,7 @@
  #pragma once
  
@@ -4981,7 +5337,7 @@ diff --git a/src/vtrasterizer/Decorator.h b/src/vtrasterizer/Decorator.h
  #include <limits>
  #include <optional>
  #include <string>
-@@ -79,7 +79,7 @@ struct std::numeric_limits<vtrasterizer::Decorator>
+@@ -79,7 +79,7 @@ struct std::numeric_limits<vtrasterizer:
  };
  
  template <>
@@ -4990,7 +5346,7 @@ diff --git a/src/vtrasterizer/Decorator.h b/src/vtrasterizer/Decorator.h
  {
      auto format(vtrasterizer::Decorator value, auto& ctx) const
      {
-@@ -87,6 +87,6 @@ struct std::formatter<vtrasterizer::Decorator>: formatter<std::string_view>
+@@ -87,6 +87,6 @@ struct std::formatter<vtrasterizer::Deco
              "underline", "double-underline", "curly-underline", "dotted-underline", "dashed-underline",
              "overline",  "crossed-out",      "framed",          "encircle",
          };
@@ -4998,10 +5354,11 @@ diff --git a/src/vtrasterizer/Decorator.h b/src/vtrasterizer/Decorator.h
 +        return fmt::formatter<std::string_view>::format(Mappings.at(static_cast<size_t>(value)), ctx);
      }
  };
-diff --git a/src/vtrasterizer/FontDescriptions.h b/src/vtrasterizer/FontDescriptions.h
---- a/src/vtrasterizer/FontDescriptions.h
-+++ b/src/vtrasterizer/FontDescriptions.h
-@@ -79,7 +79,7 @@ constexpr bool operator<(TextStyle a, TextStyle b) noexcept
+Index: deepin-contour/src/vtrasterizer/FontDescriptions.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/FontDescriptions.h
++++ deepin-contour/src/vtrasterizer/FontDescriptions.h
+@@ -79,7 +79,7 @@ constexpr bool operator<(TextStyle a, Te
  
  // {{{ fmt formatter
  template <>
@@ -5010,7 +5367,7 @@ diff --git a/src/vtrasterizer/FontDescriptions.h b/src/vtrasterizer/FontDescript
  {
      auto format(vtrasterizer::TextStyle value, auto& ctx) const
      {
-@@ -92,12 +92,12 @@ struct std::formatter<vtrasterizer::TextStyle>: std::formatter<std::string_view>
+@@ -92,12 +92,12 @@ struct std::formatter<vtrasterizer::Text
              case vtrasterizer::TextStyle::Italic: name = "Italic"; break;
              case vtrasterizer::TextStyle::BoldItalic: name = "BoldItalic"; break;
          }
@@ -5025,7 +5382,7 @@ diff --git a/src/vtrasterizer/FontDescriptions.h b/src/vtrasterizer/FontDescript
  {
      auto format(vtrasterizer::FontLocatorEngine value, auto& ctx) const
      {
-@@ -107,12 +107,12 @@ struct std::formatter<vtrasterizer::FontLocatorEngine>: std::formatter<std::stri
+@@ -107,12 +107,12 @@ struct std::formatter<vtrasterizer::Font
              case vtrasterizer::FontLocatorEngine::Native: name = "Native"; break;
              case vtrasterizer::FontLocatorEngine::Mock: name = "Mock"; break;
          }
@@ -5040,7 +5397,7 @@ diff --git a/src/vtrasterizer/FontDescriptions.h b/src/vtrasterizer/FontDescript
  {
      auto format(vtrasterizer::TextShapingEngine value, auto& ctx) const
      {
-@@ -123,16 +123,16 @@ struct std::formatter<vtrasterizer::TextShapingEngine>: std::formatter<std::stri
+@@ -123,16 +123,16 @@ struct std::formatter<vtrasterizer::Text
              case vtrasterizer::TextShapingEngine::DWrite: name = "DirectWrite"; break;
              case vtrasterizer::TextShapingEngine::OpenShaper: name = "harfbuzz"; break;
          }
@@ -5060,9 +5417,10 @@ diff --git a/src/vtrasterizer/FontDescriptions.h b/src/vtrasterizer/FontDescript
                                                            fd.size,
                                                            fd.dpi,
                                                            fd.dpiScale,
-diff --git a/src/vtrasterizer/GridMetrics.h b/src/vtrasterizer/GridMetrics.h
---- a/src/vtrasterizer/GridMetrics.h
-+++ b/src/vtrasterizer/GridMetrics.h
+Index: deepin-contour/src/vtrasterizer/GridMetrics.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/GridMetrics.h
++++ deepin-contour/src/vtrasterizer/GridMetrics.h
 @@ -6,7 +6,7 @@
  #include <crispy/point.h>
  #include <crispy/size.h>
@@ -5088,10 +5446,11 @@ diff --git a/src/vtrasterizer/GridMetrics.h b/src/vtrasterizer/GridMetrics.h
                  "(pageSize={}, cellSize={}, baseline={}, underline={}@{}, margin=(left={}, bottom={}))",
                  v.pageSize,
                  v.cellSize,
-diff --git a/src/vtrasterizer/ImageRenderer.cpp b/src/vtrasterizer/ImageRenderer.cpp
---- a/src/vtrasterizer/ImageRenderer.cpp
-+++ b/src/vtrasterizer/ImageRenderer.cpp
-@@ -36,7 +36,7 @@ void ImageRenderer::setCellSize(ImageSize cellSize)
+Index: deepin-contour/src/vtrasterizer/ImageRenderer.cpp
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/ImageRenderer.cpp
++++ deepin-contour/src/vtrasterizer/ImageRenderer.cpp
+@@ -36,7 +36,7 @@ void ImageRenderer::setCellSize(ImageSiz
  
  void ImageRenderer::renderImage(crispy::point pos, vtbackend::ImageFragment const& fragment)
  {
@@ -5100,9 +5459,10 @@ diff --git a/src/vtrasterizer/ImageRenderer.cpp b/src/vtrasterizer/ImageRenderer
  
      AtlasTileAttributes const* tileAttributes = getOrCreateCachedTileAttributes(fragment);
      if (!tileAttributes)
-diff --git a/src/vtrasterizer/Pixmap.h b/src/vtrasterizer/Pixmap.h
---- a/src/vtrasterizer/Pixmap.h
-+++ b/src/vtrasterizer/Pixmap.h
+Index: deepin-contour/src/vtrasterizer/Pixmap.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/Pixmap.h
++++ deepin-contour/src/vtrasterizer/Pixmap.h
 @@ -11,7 +11,7 @@
  
  #include <algorithm>
@@ -5112,7 +5472,7 @@ diff --git a/src/vtrasterizer/Pixmap.h b/src/vtrasterizer/Pixmap.h
  #include <functional>
  
  namespace vtrasterizer
-@@ -299,7 +299,7 @@ Pixmap& Pixmap::segment_bar(int which, More... more)
+@@ -299,7 +299,7 @@ Pixmap& Pixmap::segment_bar(int which, M
  } // end namespace vtrasterizer
  
  template <>
@@ -5121,7 +5481,7 @@ diff --git a/src/vtrasterizer/Pixmap.h b/src/vtrasterizer/Pixmap.h
  {
      auto format(vtrasterizer::Arc value, auto& ctx) const
      {
-@@ -313,6 +313,6 @@ struct std::formatter<vtrasterizer::Arc>: std::formatter<string_view>
+@@ -313,6 +313,6 @@ struct std::formatter<vtrasterizer::Arc>
              case Arc::BottomLeft: name = "BottomLeft"; break;
              case Arc::BottomRight: name = "BottomRight"; break;
          }
@@ -5129,10 +5489,11 @@ diff --git a/src/vtrasterizer/Pixmap.h b/src/vtrasterizer/Pixmap.h
 +        return fmt::formatter<string_view>::format(name, ctx);
      }
  };
-diff --git a/src/vtrasterizer/RenderTarget.h b/src/vtrasterizer/RenderTarget.h
---- a/src/vtrasterizer/RenderTarget.h
-+++ b/src/vtrasterizer/RenderTarget.h
-@@ -219,24 +219,24 @@ inline Renderable::TextureAtlas::TileCreateData Renderable::createTileData(atlas
+Index: deepin-contour/src/vtrasterizer/RenderTarget.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/RenderTarget.h
++++ deepin-contour/src/vtrasterizer/RenderTarget.h
+@@ -219,24 +219,24 @@ inline Renderable::TextureAtlas::TileCre
  
  // {{{ fmt
  template <>
@@ -5164,9 +5525,10 @@ diff --git a/src/vtrasterizer/RenderTarget.h b/src/vtrasterizer/RenderTarget.h
              ctx);
      }
  };
-diff --git a/src/vtrasterizer/Renderer.h b/src/vtrasterizer/Renderer.h
---- a/src/vtrasterizer/Renderer.h
-+++ b/src/vtrasterizer/Renderer.h
+Index: deepin-contour/src/vtrasterizer/Renderer.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/Renderer.h
++++ deepin-contour/src/vtrasterizer/Renderer.h
 @@ -19,7 +19,7 @@
  
  #include <gsl/pointers>
@@ -5176,9 +5538,10 @@ diff --git a/src/vtrasterizer/Renderer.h b/src/vtrasterizer/Renderer.h
  #include <memory>
  #include <vector>
  
-diff --git a/src/vtrasterizer/TextClusterGrouper_test.cpp b/src/vtrasterizer/TextClusterGrouper_test.cpp
---- a/src/vtrasterizer/TextClusterGrouper_test.cpp
-+++ b/src/vtrasterizer/TextClusterGrouper_test.cpp
+Index: deepin-contour/src/vtrasterizer/TextClusterGrouper_test.cpp
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/TextClusterGrouper_test.cpp
++++ deepin-contour/src/vtrasterizer/TextClusterGrouper_test.cpp
 @@ -17,7 +17,7 @@
  
  #include <catch2/catch_test_macros.hpp>
@@ -5205,7 +5568,7 @@ diff --git a/src/vtrasterizer/TextClusterGrouper_test.cpp b/src/vtrasterizer/Tex
                          crispy::escape(unicode::convert_to<char>(std::u32string_view(group.codepoints))),
                          group.initialPenPosition,
                          group.clusters
-@@ -121,13 +121,13 @@ struct std::formatter<TextClusterGroup>: formatter<std::string>
+@@ -121,13 +121,13 @@ struct std::formatter<TextClusterGroup>:
  };
  
  template <>
@@ -5222,7 +5585,7 @@ diff --git a/src/vtrasterizer/TextClusterGrouper_test.cpp b/src/vtrasterizer/Tex
                          cell.position,
                          (unsigned) cell.codepoint,
                          cell.foregroundColor),
-@@ -136,15 +136,15 @@ struct std::formatter<BoxDrawingCell>: formatter<std::string>
+@@ -136,15 +136,15 @@ struct std::formatter<BoxDrawingCell>: f
  };
  
  template <>
@@ -5241,7 +5604,7 @@ diff --git a/src/vtrasterizer/TextClusterGrouper_test.cpp b/src/vtrasterizer/Tex
      }
  };
  // }}}
-@@ -191,7 +191,7 @@ ostream& operator<<(std::ostream& os, u32string_view text)
+@@ -191,7 +191,7 @@ ostream& operator<<(std::ostream& os, u3
  
  ostream& operator<<(std::ostream& os, TextClusterGroup const& group)
  {
@@ -5250,10 +5613,11 @@ diff --git a/src/vtrasterizer/TextClusterGrouper_test.cpp b/src/vtrasterizer/Tex
  }
  } // namespace std
  // }}}
-diff --git a/src/vtrasterizer/TextRenderer.cpp b/src/vtrasterizer/TextRenderer.cpp
---- a/src/vtrasterizer/TextRenderer.cpp
-+++ b/src/vtrasterizer/TextRenderer.cpp
-@@ -405,7 +405,7 @@ Renderable::AtlasTileAttributes const* TextRenderer::ensureRasterizedIfDirectMap
+Index: deepin-contour/src/vtrasterizer/TextRenderer.cpp
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/TextRenderer.cpp
++++ deepin-contour/src/vtrasterizer/TextRenderer.cpp
+@@ -405,7 +405,7 @@ Renderable::AtlasTileAttributes const* T
      restrictToTileSize(*tileCreateData);
      Require(tileCreateData->bitmapSize.width <= textureAtlas().tileSize().width);
  
@@ -5262,7 +5626,7 @@ diff --git a/src/vtrasterizer/TextRenderer.cpp b/src/vtrasterizer/TextRenderer.c
      //            tileIndex,
      //            tileLocation,
      //            glyph,
-@@ -439,7 +439,7 @@ void TextRenderer::renderLine(vtbackend::RenderLine const& renderLine)
+@@ -439,7 +439,7 @@ void TextRenderer::renderLine(vtbackend:
  
  void TextRenderer::renderCell(vtbackend::RenderCell const& cell)
  {
@@ -5271,7 +5635,7 @@ diff --git a/src/vtrasterizer/TextRenderer.cpp b/src/vtrasterizer/TextRenderer.c
      //            cell.position,
      //            unicode::convert_to<char>(u32string_view(cell.codepoints)),
      //            _forceUpdateInitialPenPosition ? "forcedRestart" : "-",
-@@ -487,7 +487,7 @@ point TextRenderer::applyGlyphPositionToPen(point pen,
+@@ -487,7 +487,7 @@ point TextRenderer::applyGlyphPositionTo
                                             //- tileAttributes.bitmapSize.height.as<int>() // -> bitmap height
          ;
  
@@ -5280,9 +5644,10 @@ diff --git a/src/vtrasterizer/TextRenderer.cpp b/src/vtrasterizer/TextRenderer.c
      //            Point { x, y },
      //            pen,
      //            gpos,
-diff --git a/src/vtrasterizer/TextureAtlas.h b/src/vtrasterizer/TextureAtlas.h
---- a/src/vtrasterizer/TextureAtlas.h
-+++ b/src/vtrasterizer/TextureAtlas.h
+Index: deepin-contour/src/vtrasterizer/TextureAtlas.h
+===================================================================
+--- deepin-contour.orig/src/vtrasterizer/TextureAtlas.h
++++ deepin-contour/src/vtrasterizer/TextureAtlas.h
 @@ -9,7 +9,7 @@
  #include <crispy/assert.h>
  
@@ -5301,7 +5666,7 @@ diff --git a/src/vtrasterizer/TextureAtlas.h b/src/vtrasterizer/TextureAtlas.h
          //            baseIndex, baseIndex + count - 1, count);
          return DirectMapping<Metadata> { baseIndex, count };
      }
-@@ -461,7 +461,7 @@ inline vtbackend::ImageSize computeAtlasSize(AtlasProperties const& atlasPropert
+@@ -461,7 +461,7 @@ inline vtbackend::ImageSize computeAtlas
          squareEdgeCount * unbox(atlasProperties.tileSize.height))));
      // clang-format on
  
@@ -5310,7 +5675,7 @@ diff --git a/src/vtrasterizer/TextureAtlas.h b/src/vtrasterizer/TextureAtlas.h
      //            atlasProperties.tileCount,
      //            atlasProperties.directMappingCount,
      //            totalTileCount,
-@@ -502,7 +502,7 @@ TextureAtlas<Metadata>::TextureAtlas(AtlasBackend& backend, AtlasProperties atla
+@@ -502,7 +502,7 @@ TextureAtlas<Metadata>::TextureAtlas(Atl
      Require(_atlasProperties.tileCount.value <= _tileCache->capacity());
      Require(_atlasProperties.directMappingCount + _atlasProperties.tileCount.value <= _tilesInX * _tilesInY);
  
@@ -5319,7 +5684,7 @@ diff --git a/src/vtrasterizer/TextureAtlas.h b/src/vtrasterizer/TextureAtlas.h
      //            _tilesInX,
      //            _tilesInY,
      //            _tileLocations.size(),
-@@ -666,11 +666,11 @@ void TextureAtlas<Metadata>::setDirectMapping(uint32_t tileIndex, TileCreateData
+@@ -666,11 +666,11 @@ void TextureAtlas<Metadata>::setDirectMa
  template <typename Metadata>
  void TextureAtlas<Metadata>::inspect(std::ostream& output) const
  {
@@ -5336,7 +5701,7 @@ diff --git a/src/vtrasterizer/TextureAtlas.h b/src/vtrasterizer/TextureAtlas.h
      output << '\n';
      _tileCache->inspect(output);
  }
-@@ -681,7 +681,7 @@ void TextureAtlas<Metadata>::inspect(std::ostream& output) const
+@@ -681,7 +681,7 @@ void TextureAtlas<Metadata>::inspect(std
  
  // {{{ fmt support
  template <>
@@ -5345,7 +5710,7 @@ diff --git a/src/vtrasterizer/TextureAtlas.h b/src/vtrasterizer/TextureAtlas.h
  {
      auto format(vtrasterizer::atlas::Format value, auto& ctx) const
      {
-@@ -692,35 +692,35 @@ struct std::formatter<vtrasterizer::atlas::Format>: formatter<std::string_view>
+@@ -692,35 +692,35 @@ struct std::formatter<vtrasterizer::atla
              case vtrasterizer::atlas::Format::RGB: name = "RGB"; break;
              case vtrasterizer::atlas::Format::RGBA: name = "RGBA"; break;
          }

@@ -4295,8 +4295,21 @@ Index: deepin-contour/src/vtbackend/VTWriter.h
  #include <functional>
  #include <ostream>
  #include <sstream>
-@@ -75,9 +75,9 @@ template <typename... Ts>
- inline void VTWriter::write(std::format_string<Ts...> fmt, Ts const&... args)
+@@ -36,7 +36,7 @@ class VTWriter
+     void write(Line<Cell> const& line);
+ 
+     template <typename... T>
+-    void write(std::format_string<T...> fmt, T const&... args);
++    void write(fmt::format_string<T...> fmt, T const&... args);
+     void write(std::string_view s);
+     void write(char32_t v);
+ 
+@@ -72,12 +72,12 @@ class VTWriter
+ };
+ 
+ template <typename... Ts>
+-inline void VTWriter::write(std::format_string<Ts...> fmt, Ts const&... args)
++inline void VTWriter::write(fmt::format_string<Ts...> fmt, Ts const&... args)
  {
  #if defined(__APPLE__)
 -    write(std::vformat(fmt, std::make_format_args(args...)));
@@ -5218,25 +5231,30 @@ Index: deepin-contour/src/vtpty/SshSession.h
 ===================================================================
 --- deepin-contour.orig/src/vtpty/SshSession.h
 +++ deepin-contour/src/vtpty/SshSession.h
-@@ -130,13 +130,13 @@ class SshSession final: public Pty
+@@ -128,23 +128,23 @@ class SshSession final: public Pty
+     void logInfoWithInject(std::string_view message) const;
+ 
      template <typename... Args>
-     void logInfoWithInject(std::format_string<Args...> fmt, Args&&... args) const
+-    void logInfoWithInject(std::format_string<Args...> fmt, Args&&... args) const
++    void logInfoWithInject(fmt::format_string<Args...> fmt, Args&&... args) const
      {
 -        logInfoWithInject(std::format(fmt, std::forward<Args>(args)...));
 +        logInfoWithInject(fmt::format(fmt, std::forward<Args>(args)...));
      }
  
      template <typename... Args>
-     void logInfo(std::format_string<Args...> fmt, Args&&... args) const
+-    void logInfo(std::format_string<Args...> fmt, Args&&... args) const
++    void logInfo(fmt::format_string<Args...> fmt, Args&&... args) const
      {
 -        logInfo(std::format(fmt, std::forward<Args>(args)...));
 +        logInfo(fmt::format(fmt, std::forward<Args>(args)...));
      }
  
      void logError(std::string_view message) const;
-@@ -144,7 +144,7 @@ class SshSession final: public Pty
+ 
      template <typename... Args>
-     void logError(std::format_string<Args...> fmt, Args&&... args) const
+-    void logError(std::format_string<Args...> fmt, Args&&... args) const
++    void logError(fmt::format_string<Args...> fmt, Args&&... args) const
      {
 -        logError(std::format(fmt, std::forward<Args>(args)...));
 +        logError(fmt::format(fmt, std::forward<Args>(args)...));

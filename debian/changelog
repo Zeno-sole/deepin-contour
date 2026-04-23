@@ -1,3 +1,10 @@
+contour (0.6.1.7494-1deepin6) unstable; urgency=medium
+
+  * Fix use-fmt-instead-of-std-format.patch to also replace
+    std::format_string with fmt::format_string.
+
+ -- lichenggang <lichenggang@uniontech.com>  Thu, 23 Apr 2026 14:00:39 +0800
+
 contour (0.6.1.7494-1deepin5) unstable; urgency=medium
 
   * Fix use-fmt-instead-of-std-format.patch to also replace

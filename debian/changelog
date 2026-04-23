@@ -1,3 +1,9 @@
+contour (0.6.1.7494-1deepin1+rb1) unstable; urgency=medium
+
+  * Rebuild with gcc-12.
+
+ -- lichenggang <lichenggang@uniontech.com>  Thu, 23 Apr 2026 09:32:22 +0800
+
 contour (0.6.1.7494-1deepin1) unstable; urgency=medium
 
   * Disable CONTOUR_PACKAGE_TERMINFO to avoid file conflict with ncurses-term

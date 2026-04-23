@@ -1,0 +1,23 @@
+Description: Find fmt package before libunicode
+ The system libunicode package exposes fmt::fmt in its link interface,
+ but Contour's CMake did not call find_package(fmt) before
+ find_package(libunicode). This caused a CMake configuration error
+ when using system libunicode built with fmt support.
+ .
+ Add find_package(fmt) before HandleThirdparty(libunicode ...) to
+ ensure the fmt::fmt target is available when libunicode's CMake
+ config is loaded.
+Author: lichenggang <lichenggang@uniontech.com>
+---
+ cmake/ContourThirdParties.cmake | 1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/cmake/ContourThirdParties.cmake
++++ b/cmake/ContourThirdParties.cmake
+@@ -102,6 +102,7 @@ if(COMMAND ContourThirdParties_Embed_libunicode)
+     endif()
+     set(THIRDPARTY_BUILTIN_unicode_core "embedded")
+ else()
++    find_package(fmt)
+     HandleThirdparty(libunicode "gh:contour-terminal/libunicode#v${LIBUNICODE_MINIMAL_VERSION}")
+ endif()
